@@ -1,0 +1,8 @@
+{
+    "dev": {
+      "driver": "mysql",
+      "user": "admin",
+      "password":"pass123",
+      "database":"sport_shoes"
+    }
+  }
