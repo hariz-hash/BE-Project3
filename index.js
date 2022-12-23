@@ -30,6 +30,9 @@ async function main() {
     app.get('/', (req,res)=>{
         res.send("It's alive!")
     })
+    app.get('/', (req,res)=>{
+        res.send("It's alive!")
+    })
 }
 
 main();
