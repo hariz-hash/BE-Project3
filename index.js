@@ -25,7 +25,7 @@ app.use(
 
 async function main() {
     app.get('/', (req,res)=>{
-        res.send("It's alive test!")
+        res.send("It's alive testtt!")
     })
  
 }
