@@ -42,6 +42,9 @@
                  <td>
                     {{this.gender.gender}}
                 </td>
+                {{!-- <td>
+                    {{this.variant.cost}}
+                </td> --}}
             </tr>
         {{/each}}
     </tbody>
@@ -54,6 +57,7 @@
             <th>Stock</th>
             <th>Color</th>
             <th>Size</th>
+            <th>shoes</th>
 
            
         </tr>
@@ -77,11 +81,80 @@
                    <td>
                     {{this.size.size}}
                 </td>
+                    <td>
+                    {{this.shoe.model}}
+                </td>
+          
+            </tr>
+        {{/each}}
+    </tbody>
+  
+</table>
+
+
+<table class="table">
+
+  <tbody>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>username</th>
+            <th>email</th>
+            <th>role</th>
+        </tr>
+     </thead>
+       {{#each users}}
+            <tr>
+                <td>
+                    {{this.id}}
+                </td>
+                <td>
+                    {{this.username}}
+                </td>
+                <td>
+                    {{this.email}}
+                </td>
+                <td>
+                    {{this.role.role}}
+                </td>
+               
           
             </tr>
         {{/each}}
     </tbody>
 </table>
+
+<table class="table">
+
+  <tbody>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>payment</th>
+            <th>username</th>
+        </tr>
+     </thead>
+       {{#each orders}}
+            <tr>
+                <td>
+                    {{this.id}}
+                </td>
+                <td>
+                    {{this.payment_type}}
+                </td>
+               <td>
+                    {{this.user.username}}
+                </td>
+                
+                       <td>
+                    {{this.status.order_status}}
+                </td>
+          
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+
 {{/block}}
 
 {{/extends}}

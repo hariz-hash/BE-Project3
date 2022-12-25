@@ -10,6 +10,10 @@ const Shoe = bookshelf.model('Shoe', {
     gender()
     {
         return this.belongsTo('Gender')
+    },
+    variants()
+    {
+        return this.hasMany('Variant')
     }
 });
 
@@ -39,7 +43,10 @@ const Variant = bookshelf.model("Variant",{
     size()
     {
         return this.belongsTo('Size')
-
+    },
+    shoe()
+    {
+        return this.belongsTo('Shoe')
     }
 })
 
@@ -55,6 +62,48 @@ const Size = bookshelf.model("Size",{
     variants()
     {
         return this.hasMany('Variant')
+    },
+ 
+})
+
+const User = bookshelf.model("User",{
+    tableName:"users",
+    role()
+    {
+        return this.belongsTo('Role')
+    },
+    order()
+    {
+        return this.hasMany('Order')
+
     }
 })
-module.exports = { Shoe, Brand, Gender, Variant, Color, Size };
+const Order = bookshelf.model("Order",{
+    tableName:"orders",
+    user()
+    {
+        return this.belongsTo('User')
+    },
+    status()
+    {
+        return this.belongsTo('Status')
+    }
+ 
+})
+const Status = bookshelf.model("Status",{
+    tableName:"order_statuses",
+    order()
+    {
+        return this.hasMany('Order')
+    }
+})
+
+const Role = bookshelf.model("Role",{
+    tableName:"roles",
+    user()
+    {
+        return this.hasMany('User')
+    },
+})
+
+module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status };
