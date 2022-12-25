@@ -18,7 +18,6 @@ exports.up = function(db) {
   return db.createTable('sizes',{
       id: { type: 'int', primaryKey:true, autoIncrement:true, unsigned: true},
       size: { type: 'string', length:50, notNull:true},
-      
   })
 };
 
