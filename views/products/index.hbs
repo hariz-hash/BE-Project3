@@ -1,0 +1,87 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>description</th>
+            <th>Shoe Type</th>
+            <th>image url</th>
+            <th>image thumbnail url</th>
+            <th>Brand</th>
+            <th>Gender</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        {{#each shoes}}
+            <tr>
+                <td>
+                    {{this.id}}
+                </td>
+                <td>
+                    {{this.model}}
+                </td>
+                <td>
+                    {{this.description}}
+                </td>
+                <td>
+                    {{this.shoe_type}}
+                </td>
+                 <td>
+                    {{this.image_url}}
+                </td>
+                <td>
+                    {{this.thumbnail_url}}
+                </td>
+                 <td>
+                    {{this.brand.brand}}
+                </td>
+                 <td>
+                    {{this.gender.gender}}
+                </td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table><br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cost</th>
+            <th>Stock</th>
+            <th>Color</th>
+            <th>Size</th>
+
+           
+        </tr>
+
+    </thead>
+    <tbody>
+        {{#each variants}}
+            <tr>
+                <td>
+                    {{this.id}}
+                </td>
+                <td>
+                    {{this.cost}}
+                </td>
+                <td>
+                    {{this.stock}}
+                </td>
+                <td>
+                    {{this.color.color}}
+                </td>
+                   <td>
+                    {{this.size.size}}
+                </td>
+          
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/block}}
+
+{{/extends}}

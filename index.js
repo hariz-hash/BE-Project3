@@ -23,10 +23,12 @@ app.use(
   })
 );
 
+const landingRoutes = require('./routes/landing')
+const productRoutes = require('./routes/product')
+
 async function main() {
-    app.get('/', (req,res)=>{
-        res.send("It's alive testtt!")
-    })
+ app.use('/', landingRoutes)
+ app.use('/products', productRoutes);
  
 }
 
