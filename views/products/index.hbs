@@ -8,10 +8,11 @@
             <th>Model</th>
             <th>description</th>
             <th>Shoe Type</th>
-            <th>image url</th>
-            <th>image thumbnail url</th>
             <th>Brand</th>
             <th>Gender</th>
+            <th>Materials</th>
+            <th>image url</th>
+            <th>image thumbnail url</th>
         </tr>
 
     </thead>
@@ -30,18 +31,24 @@
                 <td>
                     {{this.shoe_type}}
                 </td>
+                <td>
+                    {{this.brand.brand}}
+                </td>
+                 <td>
+                    {{this.gender.gender}}
+                </td>
+                <td>
+                {{!-- {{#each this.material}}
+                <span class="badge bg-primary">{{this.materials}}</span>
+                {{/each}} --}}
+            </td>
                  <td>
                     {{this.image_url}}
                 </td>
                 <td>
                     {{this.thumbnail_url}}
                 </td>
-                 <td>
-                    {{this.brand.brand}}
-                </td>
-                 <td>
-                    {{this.gender.gender}}
-                </td>
+
                 {{!-- <td>
                     {{this.variant.cost}}
                 </td> --}}
@@ -49,7 +56,7 @@
         {{/each}}
     </tbody>
 </table><br>
-<table class="table">
+{{!-- <table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -89,10 +96,10 @@
         {{/each}}
     </tbody>
   
-</table>
+</table> --}}
 
 
-<table class="table">
+{{!-- <table class="table">
 
   <tbody>
     <thead>
@@ -122,9 +129,9 @@
             </tr>
         {{/each}}
     </tbody>
-</table>
+</table> --}}
 
-<table class="table">
+{{!-- <table class="table">
 
   <tbody>
     <thead>
@@ -153,7 +160,7 @@
             </tr>
         {{/each}}
     </tbody>
-</table>
+</table> --}}
 
 {{/block}}
 

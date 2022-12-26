@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // #1 import in the Product model
-const {Shoe, Variant, User, Order} = require('../models')
+const { bootstrapField, createProductForm } = require('../forms');
+const {Shoe, Variant, User, Order, Brand, Gender, Material} = require('../models')
 
 router.get('/', async (req,res)=>{
     // #2 - fetch all the products (ie, SELECT * from products)
@@ -30,4 +31,63 @@ router.get('/', async (req,res)=>{
     })
 })
 
+
+router.get('/create', async (req,res)=>{
+    const brands = await Brand.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('brand')]
+    })
+    const genders = await Gender.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('gender')]
+
+    })
+    const materials = await Material.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('materials')]
+
+    })
+    const productForm = createProductForm(brands,genders,materials);
+    res.render('products/create',{
+        'form': productForm.toHTML(bootstrapField)
+    })
+})
+
+router.post('/create', async (req,res)=>
+{
+    const brands = await Brand.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('brand')]
+    })
+    const genders = await Gender.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('gender')]
+
+    })
+    const materials = await Material.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('materials')]
+
+    })
+    const productForm = createProductForm(brands,genders,materials);
+    productForm.handle(req,{
+        success: async (form)=>{
+            let {materials,...productData} = form.data;
+            const product = new Shoe();
+            // product.set('model', form.data.model);
+            // product.set('description', form.data.description);
+            // product.set('shoe_type', form.data.shoe_type);
+            await product.save(productData);
+            if (materials) {
+                await product.tags().attach(materials.split(","));
+            }
+            res.redirect('/products')
+        },
+        'error': async (form) => {
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField)
+            })
+        }
+    })
+})
 module.exports = router ;
