@@ -14,6 +14,19 @@ const Shoe = bookshelf.model('Shoe', {
     variants()
     {
         return this.hasMany('Variant')
+    },// issue here
+    //many to many  on material_shoes with material
+    materials()
+    {
+        return this.belongsToMany('Material');
+    }
+});
+
+const Material = bookshelf.model('Material', {
+    tableName:'materials',
+    shoes()
+    {
+        return this.belongsToMany('Shoe');
     }
 });
 
@@ -47,6 +60,14 @@ const Variant = bookshelf.model("Variant",{
     shoe()
     {
         return this.belongsTo('Shoe')
+    },
+    users()
+    {
+        return this.belongsToMany('User');//many to many
+    },
+    orders()
+    {
+        return this.belongsToMany('Order');//many to many
     }
 })
 
@@ -76,7 +97,12 @@ const User = bookshelf.model("User",{
     {
         return this.hasMany('Order')
 
+    },
+    variants()
+    {
+        return this.belongsToMany('Variant');//many to many
     }
+    
 })
 const Order = bookshelf.model("Order",{
     tableName:"orders",
@@ -87,8 +113,13 @@ const Order = bookshelf.model("Order",{
     status()
     {
         return this.belongsTo('Status')
+    },
+    variants()
+    {
+        return this.belongsToMany('Variant');//many to many
     }
- 
+   // relationship with order_items with variants
+   //many to many
 })
 const Status = bookshelf.model("Status",{
     tableName:"order_statuses",
@@ -106,4 +137,4 @@ const Role = bookshelf.model("Role",{
     },
 })
 
-module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status };
+module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material };
