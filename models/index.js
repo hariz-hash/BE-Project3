@@ -3,6 +3,7 @@ const bookshelf = require('../bookshelf')
 
 const Shoe = bookshelf.model('Shoe', {
     tableName:'shoes',
+    idAttribute: 'id',
     brand()
     {
         return this.belongsTo('Brand')    
@@ -18,7 +19,7 @@ const Shoe = bookshelf.model('Shoe', {
     //many to many  on material_shoes with material
     materials()
     {
-        return this.belongsToMany('Material');
+        return this.belongsToMany('Material', "materials_shoes", "shoe_id");
     }
 });
 
@@ -26,7 +27,7 @@ const Material = bookshelf.model('Material', {
     tableName:'materials',
     shoes()
     {
-        return this.belongsToMany('Shoe');
+        return this.belongsToMany('Shoe','materials_shoes', 'material_id');
     }
 });
 

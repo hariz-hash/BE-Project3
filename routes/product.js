@@ -67,7 +67,6 @@ router.post('/create', async (req,res)=>
     const materials = await Material.fetchAll().map((each)=>
     {
         return[each.get('id'), each.get('materials')]
-
     })
     const productForm = createProductForm(brands,genders,materials);
     productForm.handle(req,{
@@ -75,9 +74,6 @@ router.post('/create', async (req,res)=>
             let {materials,...productData} = form.data;
             const product = new Shoe();
             console.log(materials)
-            // product.set('model', form.data.model);
-            // product.set('description', form.data.description);
-            // product.set('shoe_type', form.data.shoe_type);
             await product.save(productData);
             if (materials) {
                 await product.materials().attach(materials.split(","));
