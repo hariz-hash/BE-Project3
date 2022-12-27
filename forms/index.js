@@ -80,4 +80,42 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
     })
 };
 
-module.exports = { createProductForm, bootstrapField };
+ const createVariantForm = () => //colors,shoeSize
+{
+    return forms.create({
+        cost: fields.number({
+            label: 'Cost',
+            required: true,
+            errorAfterField: true,
+            validators: [validators.integer()]
+        }),
+        stock: fields.number({
+            label: 'Stock',
+            required: true,
+            errorAfterField: true,
+            validators: [validators.integer()]
+        }),        
+        // 'color_id': fields.string({
+        //     label:'Color',
+        //     required: true,
+        //     errorAfterField: true,
+        //     cssClasses: {
+        //         label: ['form-label']
+        //     },
+        //     widget: widgets.select(),
+        //     choices: colors
+        // }),
+        // 'size_id': fields.string({
+        //     label:'Color',
+        //     required: true,
+        //     errorAfterField: true,
+        //     cssClasses: {
+        //         label: ['form-label']
+        //     },
+        //     widget: widgets.select(),
+        //     choices: shoeSize
+        // }),
+    })
+    
+};
+module.exports = { createProductForm, bootstrapField, createVariantForm };

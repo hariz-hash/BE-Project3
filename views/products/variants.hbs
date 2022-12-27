@@ -1,0 +1,67 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+<h1> Add new product</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cost</th>
+            <th>Stock</th>
+            <th>Colors Type</th>
+            <th>Size</th>
+        
+        </tr>
+
+    </thead>
+    <tbody>
+        {{!-- {{#each shoes}}
+            <tr>
+                <td>
+                    {{this.id}}
+                </td>
+                <td>
+                    {{this.model}}
+                </td>
+                <td>
+                    {{this.description}}
+                </td>
+                <td>
+                    {{this.shoe_type}}
+                </td>
+                <td>
+                    {{this.brand.brand}}
+                </td>
+                 <td>
+                    {{this.gender.gender}}
+                </td>
+                <td>
+                {{#each this.materials}}
+                    <span class="badge bg-primary">{{this.materials}}</span>
+                {{/each}}
+                </td>
+                 {{!-- <td>
+                    {{this.image_url}}
+                </td>
+                <td>
+                    {{this.thumbnail_url}}
+                </td> --}}
+                {{!-- <td>
+                    {{this.variant.cost}}
+                </td> --}}
+            <td>
+                <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Update</a>
+                <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+            {{!-- </tr>
+        {{/each}} --}} 
+    </tbody>
+
+</table><br>
+
+    <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Variants</a>
+
+
+{{/block}}
+
+{{/extends}}

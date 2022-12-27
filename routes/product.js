@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // #1 import in the Product model
-const { bootstrapField, createProductForm } = require('../forms');
-const {Shoe, Variant, User, Order, Brand, Gender, Material} = require('../models')
+const { bootstrapField, createProductForm, createVariantForm } = require('../forms');
+const {Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size} = require('../models')
 
 router.get('/', async (req,res)=>{
     // #2 - fetch all the products (ie, SELECT * from products)
@@ -11,10 +11,11 @@ router.get('/', async (req,res)=>{
         withRelated:['brand','gender','materials']
     });
 
-    console.log(shoes.toJSON());
-    // let variant = await Variant.collection().fetch({
-    //     withRelated:['color','size','shoe']
-    // });
+    // console.log(shoes.toJSON());
+    let variant = await Variant.collection().fetch({
+        withRelated:['color','size','shoe']
+    });
+
     // let user = await User.collection().fetch({
     //     withRelated:['role']
     // });
@@ -26,13 +27,10 @@ router.get('/', async (req,res)=>{
     // });
     res.render('products/index', {
         'shoes': shoes.toJSON(),
-        // 'variants': variant.toJSON(),
-        // 'users': user.toJSON(),
-        // 'orders': order.toJSON()
-
+        'variants': variant.toJSON(),
     })
-})
 
+})
 router.get('/create', async (req,res)=>{
     const brands = await Brand.fetchAll().map((each)=>
     {
@@ -53,7 +51,6 @@ router.get('/create', async (req,res)=>{
         'form': productForm.toHTML(bootstrapField)
     })
 })
-
 router.post('/create', async (req,res)=>
 {
     const brands = await Brand.fetchAll().map((each)=>
@@ -204,19 +201,22 @@ router.post('/:product_id/delete', async(req,res)=>{
     res.redirect('/products')
 })
 
-// router.get('/:product_id/delete', async(req,res)=>{
-//     // fetch the product that we want to delete
-//     const product = await Product.where({
-//         'id': req.params.product_id
-//     }).fetch({
-//         require: true
-//     });
+router.get('/:product_id/variants', async (req,res)=>{
+    let shoes = await Shoe.collection().fetch({
+        withRelated:['brand','gender']
+    });
 
-//     res.render('products/delete', {
-//         'product': product.toJSON()
-//     })
+    let variant = await Variant.collection().fetch({
+        withRelated:['color','size','shoe']
+    });
+        res.render('products/variants',{
+              'shoes': shoes.toJSON(),
+              'variants': variant.toJSON(),
+        })
+})
 
-// });
-
-
+router.get('/:product_id/variants/create', async function(req,res)
+{
+    
+})
 module.exports = router ;
