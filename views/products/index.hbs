@@ -38,9 +38,9 @@
                     {{this.gender.gender}}
                 </td>
                 <td>
-                {{!-- {{#each this.material}}
-                <span class="badge bg-primary">{{this.materials}}</span>
-                {{/each}} --}}
+                {{#each this.materials}}
+                    <span class="badge bg-primary">{{this.materials}}</span>
+                {{/each}}
                 </td>
                  {{!-- <td>
                     {{this.image_url}}
@@ -51,7 +51,7 @@
                 {{!-- <td>
                     {{this.variant.cost}}
                 </td> --}}
-                            <td>
+            <td>
                 <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Update</a>
                 <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
             </td>

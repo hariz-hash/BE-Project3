@@ -8,8 +8,10 @@ const {Shoe, Variant, User, Order, Brand, Gender, Material} = require('../models
 router.get('/', async (req,res)=>{
     // #2 - fetch all the products (ie, SELECT * from products)
     let shoes = await Shoe.collection().fetch({
-        withRelated:['brand','gender',]
+        withRelated:['brand','gender','materials']
     });
+
+    console.log(shoes.toJSON());
     // let variant = await Variant.collection().fetch({
     //     withRelated:['color','size','shoe']
     // });
