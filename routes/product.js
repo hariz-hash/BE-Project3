@@ -8,7 +8,7 @@ const {Shoe, Variant, User, Order, Brand, Gender, Material} = require('../models
 router.get('/', async (req,res)=>{
     // #2 - fetch all the products (ie, SELECT * from products)
     let shoes = await Shoe.collection().fetch({
-        withRelated:['brand','gender']
+        withRelated:['brand','gender',]
     });
     // let variant = await Variant.collection().fetch({
     //     withRelated:['color','size','shoe']
@@ -81,6 +81,7 @@ router.post('/create', async (req,res)=>
             await product.save(productData);
             if (materials) {
                 await product.materials().attach(materials.split(","));
+                console.log(materials.split(","))
             }
             res.redirect('/products')
         },
@@ -115,9 +116,7 @@ router.get('/:product_id/update', async (req, res) => {
         require: true
     });
     console.log(productId)
-    const productForm = createProductForm(brands,genders);
-    
-
+    const productForm = createProductForm(brands,genders,materials);
 
     // // fill in the existing values
     productForm.fields.model.value = product.get('model');
@@ -126,7 +125,6 @@ router.get('/:product_id/update', async (req, res) => {
     productForm.fields.brand_id.value = product.get('brand_id');
     productForm.fields.gender_id.value = product.get('gender_id');
     
-
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
         'product': product.toJSON()
