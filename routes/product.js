@@ -77,6 +77,7 @@ router.post('/create', async (req,res)=>
                 await product.materials().attach(materials.split(","));
                 console.log(materials.split(","))
             }
+            req.flash("success_messages", `New Product ${product.get('model')} has been created`)
             res.redirect('/products')
         },
         'error': async (form) => {
