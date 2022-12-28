@@ -83,13 +83,13 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
  const createVariantForm = () => //colors,shoeSize
 {
     return forms.create({
-        cost: fields.number({
+        'cost': fields.number({
             label: 'Cost',
             required: true,
             errorAfterField: true,
             validators: [validators.integer()]
         }),
-        stock: fields.number({
+        'stock': fields.number({
             label: 'Stock',
             required: true,
             errorAfterField: true,
@@ -118,4 +118,38 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
     })
     
 };
-module.exports = { createProductForm, bootstrapField, createVariantForm };
+
+const createRegistrationForm = () =>
+{
+    return forms.create({
+        'username':fields.string({
+            required:true,
+            cssClasses:{
+                label:['form-label']
+            }
+        }),
+        'password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'email': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'confirm_password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators: [validators.matchField('password')]
+        })
+    })
+}
+module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm };

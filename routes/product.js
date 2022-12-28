@@ -78,7 +78,7 @@ router.post('/create', async (req,res)=>
                 console.log(materials.split(","))
             }
             req.flash("success_messages", `New Product ${product.get('model')} has been created`)
-            res.redirect('/products')
+            res.redirect('/products')//where does this url comes from 
         },
         'error': async (form) => {
             res.render('products/create', {
@@ -122,6 +122,7 @@ router.get('/:product_id/update', async (req, res) => {
     
     let selectedMaterials = await product.related('materials').pluck('id');
     productForm.fields.materials.value = selectedMaterials;
+
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
@@ -203,17 +204,27 @@ router.post('/:product_id/delete', async(req,res)=>{
 })
 
 router.get('/:product_id/variants', async (req,res)=>{
-    let shoes = await Shoe.collection().fetch({
-        withRelated:['brand','gender']
-    });
 
-    let variant = await Variant.collection().fetch({
+
+    // let shoes = await Shoe.collection().fetch({
+    //     withRelated:['brand','gender']
+    // });
+    // let variant = await Variant.collection().fetch({
+    //     withRelated:['color','size','shoe']
+    // });
+    const productId = req.params.product_id;
+    const variantDisplay = await Variant.where({
+        'shoe_id':productId
+    }).fetchAll({
+        require: true,
         withRelated:['color','size','shoe']
-    });
-        res.render('products/variants',{
-              'shoes': shoes.toJSON(),
-              'variants': variant.toJSON(),
-        })
+    })
+    console.log({variantDisplay})
+    res.render('products/variants',{
+            //   'shoes': productShoe.toJSON(),
+               'variants': variantDisplay.toJSON(),
+    })
+
 })
 
 router.get('/:product_id/variants/create', async function(req,res)

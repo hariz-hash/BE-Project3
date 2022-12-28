@@ -1,7 +1,7 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-<h1> Add new product</h1>
+<h1> Variant</h1>
 <table class="table">
     <thead>
         <tr>
@@ -10,56 +10,44 @@
             <th>Stock</th>
             <th>Colors Type</th>
             <th>Size</th>
+            <th>Shoe Id</th>
         
         </tr>
 
     </thead>
-    <tbody>
-        {{!-- {{#each shoes}}
+    <tbody>test here var
+        {{#each variants}}
             <tr>
-                <td>
+              <td>
                     {{this.id}}
-                </td>
-                <td>
-                    {{this.model}}
-                </td>
-                <td>
-                    {{this.description}}
-                </td>
-                <td>
-                    {{this.shoe_type}}
-                </td>
-                <td>
-                    {{this.brand.brand}}
-                </td>
-                 <td>
-                    {{this.gender.gender}}
-                </td>
-                <td>
-                {{#each this.materials}}
-                    <span class="badge bg-primary">{{this.materials}}</span>
-                {{/each}}
-                </td>
-                 {{!-- <td>
-                    {{this.image_url}}
-                </td>
-                <td>
-                    {{this.thumbnail_url}}
-                </td> --}}
-                {{!-- <td>
-                    {{this.variant.cost}}
-                </td> --}}
-            <td>
-                <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Update</a>
+              </td>
+              <td>
+                    {{this.cost}} 
+              </td>
+               <td>
+                    {{this.stock}} 
+              </td>
+              <td>
+                    {{this.color.color}} 
+              </td>
+              <td>
+                    {{this.size.size}} 
+              </td>
+              <td>
+                    {{this.shoe.id}} 
+              </td>
+              <td>
+                <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Edit</a>
                 <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
             </td>
-            {{!-- </tr>
-        {{/each}} --}} 
+            </tr>
+         
+        {{/each}} 
     </tbody>
 
 </table><br>
 
-    <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Variants</a>
+    <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Add Variant</a>
 
 
 {{/block}}
