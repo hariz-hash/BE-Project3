@@ -10,10 +10,8 @@
             <th>Stock</th>
             <th>Colors Type</th>
             <th>Size</th>
-            <th>Shoe Id</th>
-        
+            
         </tr>
-
     </thead>
     <tbody>test here var
         {{#each variants}}
@@ -33,22 +31,17 @@
               <td>
                     {{this.size.size}} 
               </td>
-              <td>
-                    {{this.shoe.id}} 
-              </td>
+              
               <td>
                 <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Edit</a>
                 <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
             </td>
             </tr>
-         
+            {{!-- <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Add Variant</a> --}}
         {{/each}} 
+       
     </tbody>
-
 </table><br>
-
-    <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Add Variant</a>
-
 
 {{/block}}
 

@@ -43,15 +43,6 @@
                     <span class="badge bg-primary">{{this.materials}}</span>
                 {{/each}}
                 </td>
-                 {{!-- <td>
-                    {{this.image_url}}
-                </td>
-                <td>
-                    {{this.thumbnail_url}}
-                </td> --}}
-                {{!-- <td>
-                    {{this.variant.cost}}
-                </td> --}}
             <td>
                 <a href="/products/{{this.id}}/variants" class="btn btn-warning btn-sm">Variants</a>
                 <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Update</a>
@@ -60,116 +51,8 @@
             </tr>
         {{/each}}
     </tbody>
-
 </table><br>
-{{!-- <table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Cost</th>
-            <th>Stock</th>
-            <th>Color</th>
-            <th>Size</th>
-            <th>shoes</th>
-
-           
-        </tr>
-
-    </thead>
-    <tbody>
-        {{#each variants}}
-            <tr>
-                <td>
-                    {{this.id}}
-                </td>
-                <td>
-                    {{this.cost}}
-                </td>
-                <td>
-                    {{this.stock}}
-                </td>
-                <td>
-                    {{this.color.color}}
-                </td>
-                   <td>
-                    {{this.size.size}}
-                </td>
-                    <td>
-                    {{this.shoe.model}}
-                </td>
-          
-            </tr>
-        {{/each}}
-    </tbody>
-  
-</table> --}}
-
-
-{{!-- <table class="table">
-
-  <tbody>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>username</th>
-            <th>email</th>
-            <th>role</th>
-        </tr>
-     </thead>
-       {{#each users}}
-            <tr>
-                <td>
-                    {{this.id}}
-                </td>
-                <td>
-                    {{this.username}}
-                </td>
-                <td>
-                    {{this.email}}
-                </td>
-                <td>
-                    {{this.role.role}}
-                </td>
-               
-          
-            </tr>
-        {{/each}}
-    </tbody>
-</table> --}}
-
-{{!-- <table class="table">
-
-  <tbody>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>payment</th>
-            <th>username</th>
-        </tr>
-     </thead>
-       {{#each orders}}
-            <tr>
-                <td>
-                    {{this.id}}
-                </td>
-                <td>
-                    {{this.payment_type}}
-                </td>
-               <td>
-                    {{this.user.username}}
-                </td>
-                
-                       <td>
-                    {{this.status.order_status}}
-                </td>
-          
-            </tr>
-        {{/each}}
-    </tbody>
-</table> --}}
     <a href="/products/create" class="btn btn-danger btn-sm">Add new products</a>
-
-
 {{/block}}
 
 {{/extends}}

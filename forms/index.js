@@ -76,6 +76,9 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             },
             widget: widgets.multipleSelect(),
             choices:materials
+        }),
+        'image_url':fields.string({
+            widget: widgets.hidden()
         })
     })
 };

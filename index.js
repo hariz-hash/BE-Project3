@@ -4,6 +4,7 @@ const wax = require("wax-on");
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
+const csrf= require('csurf');
 require("dotenv").config();
 
 // create an instance of express app
@@ -43,18 +44,26 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(csrf());
+app.use(function(req,res,next){
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
 const landingRoutes = require('./routes/landing')
 const productRoutes = require('./routes/product')
 const userRoutes = require('./routes/users')
+const cloudinaryRoutes = require('./routes/cloudinary.js')
 
 async function main() {
  app.use('/', landingRoutes)
  app.use('/products', productRoutes);
  app.use('/users', userRoutes);
+ app.use('/cloudinary', cloudinaryRoutes);
 }
 
 main();
 
-app.listen(3000, () => {
+app.listen(7000, () => {
   console.log("Server has started");
 });

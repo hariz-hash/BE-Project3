@@ -10,10 +10,34 @@ router.get('/register', (req,res)=>
 {
     //display registration form
     const registerForm = createRegistrationForm();
-    res.render('/user/register',
+    res.render('users/register',
     {
         'form': registerForm.toHTML(bootstrapField)
     })
 })
-
+router.post('/register',(req,res)=>
+{
+    const registerForm = createRegistrationForm();
+    registerForm.handle(req, {
+        success: async (form) => {
+            const user = new User({
+                'username': form.data.username,
+                'password': form.data.password,
+                'email': form.data.email
+            });
+            await user.save();
+            req.flash("success_messages", "User signed up successfully!");
+            res.redirect('/users/login')
+        },
+        'error': (form) => {
+            res.render('users/register', {
+                'form': form.toHTML(bootstrapField)
+            })
+        }
+    })
+})
+router.get('/login',(req,res)=>
+{
+    res.render('user/login')
+})
 module.exports = router;
