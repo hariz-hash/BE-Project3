@@ -44,11 +44,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(csrf());
-app.use(function(req,res,next){
-  res.locals.csrfToken = req.csrfToken();
-  next();
-})
+
 
 const landingRoutes = require('./routes/landing')
 const productRoutes = require('./routes/product')
@@ -64,6 +60,6 @@ async function main() {
 
 main();
 
-app.listen(7000, () => {
+app.listen(3011, () => {
   console.log("Server has started");
 });

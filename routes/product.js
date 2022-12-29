@@ -217,10 +217,18 @@ router.get('/:product_id/variants', async (req,res)=>{
     const productId = req.params.product_id;
     let variantDisplay = await Variant.where({
         'shoe_id':productId
-    }).fetchAll({
-        require: true,
-        withRelated:['color','size','shoe']
-    })
+    }).fetchAll(
+        {
+            require: false,
+            withRelated:['color','size']
+        }
+    )
+    // let shoe = await Shoe.where({
+    //     'shoe_id':productId
+    // }).fetchAll({
+    //     require: true,
+    //     withRelated:['variants']
+    // })
     
     // if(variantDisplay)
     // {
@@ -229,16 +237,11 @@ router.get('/:product_id/variants', async (req,res)=>{
     // else{
     //     variantDisplay=[]
     // }
-    // console.log({variantDisplay})
+    // console.log(variantDisplay.toJSON())
     res.render('products/variants',{
-            //   'shoes': productShoe.toJSON(),
+            //    'shoes': shoe.toJSON(),
                'variants': variantDisplay.toJSON(),
     })
-
 })
 
-// router.get('/:product_id/variants/create', async function(req,res)
-// {
-    
-// })
 module.exports = router ;
