@@ -77,8 +77,14 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             widget: widgets.multipleSelect(),
             choices:materials
         }),
-        'image_url':fields.string({
-            widget: widgets.hidden()
+        'image_url': fields.url({
+            required: validators.required('Image required'),
+            errorAfterField: true,
+            validators: [validators.url()],
+            widget: forms.widgets.hidden()
+        }),
+        'thumbnail_url': fields.url({
+            widget: forms.widgets.hidden()
         })
     })
 };
@@ -120,7 +126,10 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
         }),
         'image_url':fields.string({
             widget: widgets.hidden()
-        })
+        }),
+        'thumbnail_url': fields.url({
+			widget: widgets.hidden()
+		})
     })
     
 };
