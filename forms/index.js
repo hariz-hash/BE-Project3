@@ -83,7 +83,7 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
     })
 };
 
- const createVariantForm = () => //colors,shoeSize
+ const createVariantForm = (colors,size) => //colors,shoeSize
 {
     return forms.create({
         'cost': fields.number({
@@ -98,26 +98,29 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             errorAfterField: true,
             validators: [validators.integer()]
         }),        
-        // 'color_id': fields.string({
-        //     label:'Color',
-        //     required: true,
-        //     errorAfterField: true,
-        //     cssClasses: {
-        //         label: ['form-label']
-        //     },
-        //     widget: widgets.select(),
-        //     choices: colors
-        // }),
-        // 'size_id': fields.string({
-        //     label:'Color',
-        //     required: true,
-        //     errorAfterField: true,
-        //     cssClasses: {
-        //         label: ['form-label']
-        //     },
-        //     widget: widgets.select(),
-        //     choices: shoeSize
-        // }),
+        'color_id': fields.string({
+            label:'Color',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: colors
+        }),
+        'size_id': fields.string({
+            label:'size',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: size
+        }),
+        'image_url':fields.string({
+            widget: widgets.hidden()
+        })
     })
     
 };

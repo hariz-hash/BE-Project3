@@ -16,20 +16,10 @@ router.get('/', async (req,res)=>{
         withRelated:['color','size','shoe']
     });
 
-    // let user = await User.collection().fetch({
-    //     withRelated:['role']
-    // });
-    // let order = await Order.collection().fetch({
-    //     withRelated:['user','status']
-    // });
-    // let order = await Order.collection().fetch({
-    //     withRelated:['order']
-    // });
     res.render('products/index', {
         'shoes': shoes.toJSON(),
         'variants': variant.toJSON(),
     })
-
 })
 router.get('/create', async (req,res)=>{
     const brands = await Brand.fetchAll().map((each)=>
@@ -69,6 +59,9 @@ router.post('/create', async (req,res)=>
     {
         return[each.get('id'), each.get('materials')]
     })
+
+
+
     const productForm = createProductForm(brands,genders,materials);
     productForm.handle(req,{
         success: async (form)=>{
@@ -126,7 +119,6 @@ router.get('/:product_id/update', async (req, res) => {
     let selectedMaterials = await product.related('materials').pluck('id');
     productForm.fields.materials.value = selectedMaterials;
 
-
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
         'product': product.toJSON()
@@ -160,7 +152,6 @@ router.post('/:product_id/update', async (req, res) => {
     const productForm = createProductForm(brands,genders,materials);
     productForm.handle(req, {
         'success': async (form) => {
-            
             let{materials,...productData} = form.data;
             product.set(productData);
             product.save();
@@ -205,16 +196,18 @@ router.post('/:product_id/delete', async(req,res)=>{
     await product.destroy();
     res.redirect('/products')
 })
-
 router.get('/:product_id/variants', async (req,res)=>{
 
-    // let shoes = await Shoe.collection().fetch({
-    //     withRelated:['brand','gender']
-    // });
-    // let variant = await Variant.collection().fetch({
-    //     withRelated:['color','size','shoe']
-    // });
     const productId = req.params.product_id;
+    
+    let shoe = await Shoe.where({
+        "id": productId
+    }).fetch(
+        {
+            withRelated:['brand','gender','materials']
+        }
+    )
+        console.log(shoe);
     let variantDisplay = await Variant.where({
         'shoe_id':productId
     }).fetchAll(
@@ -223,25 +216,183 @@ router.get('/:product_id/variants', async (req,res)=>{
             withRelated:['color','size']
         }
     )
-    // let shoe = await Shoe.where({
-    //     'shoe_id':productId
-    // }).fetchAll({
-    //     require: true,
-    //     withRelated:['variants']
-    // })
-    
-    // if(variantDisplay)
-    // {
-    //     variantDisplay = variantDisplay.toJSON()
-    // }
-    // else{
-    //     variantDisplay=[]
-    // }
-    // console.log(variantDisplay.toJSON())
+   
     res.render('products/variants',{
-            //    'shoes': shoe.toJSON(),
+               'shoes': shoe.toJSON(),
                'variants': variantDisplay.toJSON(),
     })
+})
+router.get('/:product_id/variants/create', async(req,res)=>
+{
+    const color = await Color.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('color')]
+    })
+    const size = await Size.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('size')]
+    })
+
+    const productForm = createVariantForm(color,size)
+    console.log({productForm})
+    res.render('products/create-variant',{
+        'form': productForm.toHTML(bootstrapField),
+        'cloudinaryName': process.env.CLOUDINARY_NAME,
+        'cloudinaryApiKey': process.env.CLOUDINARY_API_KEY,
+        'cloudinaryPreset': process.env.CLOUDINARY_UPLOAD_PRESET
+    })
+})
+
+router.post('/:product_id/variants/create', async(req,res)=>
+{
+    const color = await Color.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('color')]
+    })
+    const size = await Size.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('size')]
+    })
+
+    // let shoe = await Shoe.where({
+    //     "id": productId
+    // }).fetch(
+    //     {
+    //         withRelated:['brand','gender','materials']
+    //     }
+    // )
+    //     console.log(shoe);
+    // let variantDisplay = await Variant.where({
+    //     'shoe_id':productId
+    // }).fetchAll(
+    //     {
+    //         require: false,
+    //         withRelated:['color','size']
+    //     }
+    // )
+    const productId = req.params.product_id;
+
+    const productForm = createVariantForm(color,size)
+    productForm.handle(req,{
+        success: async (form)=>{
+            const variantData = {
+                ...form.data,
+                shoe_id: req.params.product_id
+            };
+
+            const variant = new Variant();
+            await variant.save(variantData);
+         
+            req.flash("success_messages", `New variant  has been added`)
+            res.redirect('/products')//where does this url comes from 
+        },
+        'error': async (form) => {
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField)
+            })
+        }
+    })
+})
+
+router.get('/:product_id/variants/:variant_id/update',async(req,res)=>
+{
+    const color = await Color.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('color')]
+    })
+    const size = await Size.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('size')]
+    })
+
+    let variantDisplay = await Variant.where({
+        'id':req.params.variant_id
+    }).fetch(
+        {
+            require: false,
+            withRelated:['color','size']
+        }
+    )
+    const variantForm = createVariantForm(color,size);
+    variantForm.fields.cost.value = variantDisplay.get('cost');
+    variantForm.fields.stock.value = variantDisplay.get('stock');
+    variantForm.fields.color_id.value = variantDisplay.get('color_id');
+    variantForm.fields.size_id.value = variantDisplay.get('size_id');
+    res.render('products/update-variant', {
+        variant: variantDisplay.toJSON(),
+        form: variantForm.toHTML(bootstrapField)
+      });
+  
+})
+
+router.post('/:product_id/variants/:variant_id/update', async(req,res)=>
+{
+    const color = await Color.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('color')]
+    })
+    const size = await Size.fetchAll().map((each)=>
+    {
+        return[each.get('id'), each.get('size')]
+    })
+    let variantDisplay = await Variant.where({
+        'id':req.params.variant_id
+    }).fetch(
+        {
+            require: false,
+            withRelated:['color','size']
+        }
+    )
+    const variantForm = createVariantForm(color,size);
+    variantForm.handle(req,{
+        success: async (form)=>{
+            const variantData = {
+                ...form.data,
+                shoe_id: req.params.product_id
+            };
+
+            // const variant = new Variant();
+            variantDisplay.set(variantData)
+            await variantDisplay.save();
+         
+            req.flash("success_messages", `New variant  has been added`)
+            res.redirect(`/products/${req.params.product_id}/variants`);
+        },
+        'error': async (form) => {
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField)
+            })
+        }
+     })
+})
+
+
+router.get('/:product_id/variants/:variant_id/delete', async (req,res)=> {
+    let variantDisplay = await Variant.where({
+        'id':req.params.variant_id
+    }).fetchAll(
+        {
+            withRelated:['color','size']
+        }
+    )
+    res.render('products/delete-variant', {
+        variant: variantDisplay.toJSON()
+    })
+})
+router.post('/:product_id/variants/:variant_id/delete', async (req,res)=> {
+    
+    let variantDisplay = await Variant.where({
+        'id':req.params.variant_id
+    }).fetch(
+        {
+            require: false,
+            withRelated:['color','size']
+        }
+    )
+    await variantDisplay.destroy()
+    res.redirect(`/products/${req.params.product_id}/variants`);
+
+
 })
 
 module.exports = router ;

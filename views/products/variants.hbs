@@ -6,41 +6,69 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>model</th>
+            <th>description</th>
+            <th>Shoe Type</th>
+            <th>img</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {{shoes.id}}
+            </td>
+            <td>
+                {{shoes.model}}
+            </td>
+            <td>
+                {{shoes.description}}
+            </td>
+            <td>
+                {{shoes.shoe_type}}
+            </td>
+              <td>
+                {{shoes.image_url}}
+            </td>
+        </tr>
+    </tbody>
+</table><br>
+  <a href="/products/{{shoes.id}}/variants/create" class="btn btn-primary btn-sm">Add variant</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
             <th>Cost</th>
             <th>Stock</th>
             <th>Colors Type</th>
             <th>Size</th>
-            
         </tr>
     </thead>
-    <tbody>test here var
+    <tbody>
         {{#each variants}}
-            <tr>
-              <td>
-                    {{this.id}}
-              </td>
-              <td>
-                    {{this.cost}} 
-              </td>
-               <td>
-                    {{this.stock}} 
-              </td>
-              <td>
-                    {{this.color.color}} 
-              </td>
-              <td>
-                    {{this.size.size}} 
-              </td>
-              
-              <td>
-                  
-                <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Edit</a>
-                <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+        <tr>
+            <td>
+                {{this.id}}
             </td>
-            </tr>
-            {{!-- <a href="/variants/{{this.id}}/create" class="btn btn-warning btn-sm">Add Variant</a> --}}
-        {{/each}} 
-       
+            <td>
+                {{this.cost}}
+            </td>
+            <td>
+                {{this.stock}}
+            </td>
+            <td>
+                {{this.color.color}}
+            </td>
+            <td>
+                {{this.size.size}}
+            </td>
+
+            <td>
+                <a href="/products/{{this.shoe_id}}/variants/{{this.id}}/update" class="btn btn-primary btn-sm">Edit</a>
+                <a href="/products/{{this.shoe_id}}/variants/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {{/each}}
+
     </tbody>
 </table><br>
 
