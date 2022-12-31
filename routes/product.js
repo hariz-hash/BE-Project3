@@ -275,16 +275,20 @@ router.post('/:product_id/variants/create', async(req,res)=>
     const productForm = createVariantForm(color,size)
     productForm.handle(req,{
         success: async (form)=>{
+            const dataIn ={...form.data};
+            console.log({dataIn})
             const variantData = {
-                ...form.data,
-                shoe_id: req.params.product_id
+                shoe_id: req.params.product_id,
+                ...form.data
             };
-
+            console.log({variantData})
             const variant = new Variant();
             await variant.save(variantData);
          
             req.flash("success_messages", `New variant  has been added`)
-            res.redirect('/products')//where does this url comes from 
+            // res.redirect('/products')//where does this url comes from 
+            res.redirect(`/products/${req.params.product_id}/variants`);
+
         },
         'error': async (form) => {
             res.render('products/create', {
@@ -368,6 +372,13 @@ router.post('/:product_id/variants/:variant_id/update', async(req,res)=>
 
 
 router.get('/:product_id/variants/:variant_id/delete', async (req,res)=> {
+    let shoe = await Shoe.where({
+        "id": req.params.product_id
+    }).fetch(
+        {
+            withRelated:['brand','gender','materials']
+        }
+    )
     let variantDisplay = await Variant.where({
         'id':req.params.variant_id
     }).fetchAll(
@@ -376,7 +387,8 @@ router.get('/:product_id/variants/:variant_id/delete', async (req,res)=> {
         }
     )
     res.render('products/delete-variant', {
-        variant: variantDisplay.toJSON()
+        'variant': variantDisplay.toJSON(),
+        'shoes': shoe.toJSON()
     })
 })
 router.post('/:product_id/variants/:variant_id/delete', async (req,res)=> {

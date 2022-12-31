@@ -27,7 +27,7 @@
                 {{shoes.shoe_type}}
             </td>
               <td>
-                {{shoes.image_url}}
+            <img src='{{shoes.thumbnail_url}}' alt='shoe image' />
             </td>
         </tr>
     </tbody>
@@ -41,6 +41,8 @@
             <th>Stock</th>
             <th>Colors Type</th>
             <th>Size</th>
+            <th>Image</th>
+            <th>Options</th>
         </tr>
     </thead>
     <tbody>
@@ -61,7 +63,9 @@
             <td>
                 {{this.size.size}}
             </td>
-
+            <td>
+               <img src='{{this.thumbnail_url}}' alt='shoe image' />
+            </td>
             <td>
                 <a href="/products/{{this.shoe_id}}/variants/{{this.id}}/update" class="btn btn-primary btn-sm">Edit</a>
                 <a href="/products/{{this.shoe_id}}/variants/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
@@ -71,7 +75,5 @@
 
     </tbody>
 </table><br>
-
 {{/block}}
-
 {{/extends}}

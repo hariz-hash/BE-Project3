@@ -46,10 +46,10 @@ const uploadWidget = cloudinary.createUploadWidget({
     if (!error && result && result.event == "success") {
         const url = result.info.url;
 
-      document.querySelector('#id_image_url').value = result.info.url;
-      document.querySelector('#id_thumbnail_url').value = result.info.thumbnail_url;
-      document.querySelector('#uploaded_image').src = result.info.thumbnail_url;
-      document.querySelector('#uploaded_image').style.display = 'inline';
+            document.querySelector('#id_image_url').value = result.info.url;
+            document.querySelector('#uploaded_image').src = result.info.thumbnail_url;
+            document.querySelector('#uploaded_image').style.display = 'inline';
+            document.querySelector('#id_thumbnail_url').value = result.info.thumbnail_url;
     }
 })
 document.querySelector("#upload_widget").addEventListener("click", function(){
