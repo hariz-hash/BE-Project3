@@ -51,6 +51,12 @@ const productRoutes = require('./routes/product')
 const userRoutes = require('./routes/users')
 const cloudinaryRoutes = require('./routes/cloudinary.js')
 
+// Share the user data with hbs files
+app.use(function(req,res,next){
+  res.locals.user = req.session.user;
+  next();
+})
+
 async function main() {
  app.use('/', landingRoutes)
  app.use('/products', productRoutes);

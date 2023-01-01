@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const crypto = require('crypto');
+const { User } = require('../models')
+const { checkIfAuthenticated } = require('../middlewares');
 
 // import in the User model
-const { User } = require('../models');
 
 const { createRegistrationForm, bootstrapField, createLoginForm } = require('../forms');
 
@@ -20,7 +22,7 @@ router.post('/register', (req, res) => {
         success: async (form) => {
             const { confirm_password, ...userData } = form.data;
             userData.role_id = 2;
-            
+            userData.password = getHashedPassword(userData.password)
             const user = new User(userData);
             await user.save();
             console.log(userData)
@@ -35,56 +37,74 @@ router.post('/register', (req, res) => {
     })
 })
 router.get('/login', (req, res) => {
-    const registerForm = createLoginForm();
-    res.render('user/register',
+    const loginForm = createLoginForm();
+    res.render('user/login',
         {
-            'form': registerForm.toHTML(bootstrapField)
+            'form': loginForm.toHTML(bootstrapField)
         })
 })
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const loginForm = createLoginForm();
-    loginForm.handle(req,{
-        'success': async function(form) {
-            // 1. we need to check if there is a user with the provided email address
-            // 2. if there is a user with that email address, check if the password matches
-            const user = await User.where({
-                'email': form.data.email,
-                'password': form.data.password
-            }).fetch({
-                require: false
-            })
+    loginForm.handle(req, {
+        'success': async (form) => {
+            // process the login
 
-            if (user) {
-                  // 3. if both 1 and 2 passes, then the user exists
-                  //     and we use the session for the client to remember that this client has logged in as that user
-                  
-                  // req.session represents the session file
-                  // when we do `req.session.user` we are adding a new key named `user` to the session
-                  // and the session file will auto save after the response is sent back
-                  req.session.user = {
-                    'id': user.get('id'),
-                    'username': user.get('username'),
-                    'email': user.get('email')
-                  }
-                  req.flash('success_messages', "Login successful!");
-                  res.redirect('/products');
-        
-            } else {
-                req.flash('error_messages', "Your login credentials is invalid");
+            // ...find the user by email and password
+            let user = await User.where({
+                'email': form.data.email
+            }).fetch({
+               require:false}
+            );
+
+            if (!user) {
+                req.flash("error_messages", "Sorry, the authentication details you provided does not work.")
                 res.redirect('/users/login');
+            } else {
+                // check if the password matches
+                if (user.get('password') === getHashedPassword(form.data.password)) {
+                    // add to the session that login succeed
+
+                    // store the user details
+                    req.session.user = {
+                        id: user.get('id'),
+                        username: user.get('username'),
+                        email: user.get('email')
+                    }
+                    req.flash("success_messages", "Welcome back, " + user.get('username'));
+                    res.redirect('/products');
+                } else {
+                    req.flash("error_messages", "Sorry, the authentication details you provided does not work.")
+                    res.redirect('/user/login')
+                }
             }
-          
-        },
-        'error': function(form) {
-            res.render('users/login', {
-                'form': form
-            })
-        },
-        'empty': function(form) {
-            res.render('users/login', {
-                'form': form
+        }, 'error': (form) => {
+            req.flash("error_messages", "There are some problems logging you in. Please fill in the form again")
+            res.render('user/login', {
+                'form': form.toHTML(bootstrapField)
             })
         }
     })
 })
+router.get('/profile',checkIfAuthenticated, (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        req.flash('error_messages', 'You do not have permission to view this page');
+        res.redirect('/users/login');
+    } else {
+        res.render('user/profile', {
+            'user': user
+        })
+    }
+
+})
+router.get('/logout', (req, res) => {
+    req.session.user = null;
+    req.flash('success_messages', "Goodbye");
+    res.redirect('/users/login');
+})
+const getHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
 module.exports = router;

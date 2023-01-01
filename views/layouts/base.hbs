@@ -1,37 +1,73 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <div class="container">
-          {{#if success_messages }}        
-                {{#each success_messages}}
-                    <div class="alert alert-success">
-                        {{this}}
-                    </div>
-                {{/each}}        
-            {{/if}}
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-            {{#if error_messages}}
-                {{#each error_messages}}
-                    <div class="alert alert-danger">
-                        {{this}}
-                    </div>
-                {{/each}}       
-          {{/if}} 
-        {{#block "content"}}
-           
-        {{/block}}
+  <title>Hello, world!</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+      <!-- Links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+
+      </ul>
     </div>
-    {{#block 'js'}}
+    <div>
+
+      {{#if user}}
+      Hi, {{user.username}}
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="/users/logout" class="ml-3 btn btn-primary btn-sm">Logout</a>
+        </li>
+      </ul>
+      {{else}}
+      <ul class="navbar-nav">
+        <li>
+          <a href="/users/login" class="ml-3 btn btn-primary btn-sm">Login</a>
+        </li>
+        <li class="nav-item">
+          <a href="/users/register" class="ml-3 btn btn-primary btn-sm">Register</a>
+        </li>
+      </ul>
+      {{/if}}
+
+    </div>
+  </nav>
+
+  <div class="container">
+    {{#if success_messages }}
+    {{#each success_messages}}
+    <div class="alert alert-success">
+      {{this}}
+    </div>
+    {{/each}}
+    {{/if}}
+    {{#if error_messages}}
+    {{#each error_messages}}
+    <div class="alert alert-danger">
+      {{this}}
+    </div>
+    {{/each}}
+    {{/if}}
+    {{#block "content"}}
+
     {{/block}}
-  </body>
+  </div>
+  {{#block 'js'}}
+  {{/block}}
+</body>
+
 </html>

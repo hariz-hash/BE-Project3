@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-
+const { checkIfAuthenticated } = require('../middlewares');
 // #1 import in the Product model
 const { bootstrapField, createProductForm, createVariantForm } = require('../forms');
 const {Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size} = require('../models')
 
-router.get('/', async (req,res)=>{
+router.get('/',checkIfAuthenticated, async (req,res)=>{
     // #2 - fetch all the products (ie, SELECT * from products)
     let shoes = await Shoe.collection().fetch({
         withRelated:['brand','gender','materials']
@@ -21,7 +21,7 @@ router.get('/', async (req,res)=>{
         'variants': variant.toJSON(),
     })
 })
-router.get('/create', async (req,res)=>{
+router.get('/create',checkIfAuthenticated, async (req,res)=>{
     const brands = await Brand.fetchAll().map((each)=>
     {
         return[each.get('id'), each.get('brand')]
@@ -44,7 +44,7 @@ router.get('/create', async (req,res)=>{
         'cloudinaryPreset': process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
-router.post('/create', async (req,res)=>
+router.post('/create',checkIfAuthenticated, async (req,res)=>
 {
     const brands = await Brand.fetchAll().map((each)=>
     {
@@ -83,7 +83,7 @@ router.post('/create', async (req,res)=>
         }
     })
 })
-router.get('/:product_id/update', async (req, res) => {
+router.get('/:product_id/update',checkIfAuthenticated, async (req, res) => {
     // retrieve the product
     const brands = await Brand.fetchAll().map((each)=>
     {
@@ -124,7 +124,7 @@ router.get('/:product_id/update', async (req, res) => {
         'product': product.toJSON()
     })
 })
-router.post('/:product_id/update', async (req, res) => {
+router.post('/:product_id/update',checkIfAuthenticated, async (req, res) => {
     // fetch the product that we want to update
     const brands = await Brand.fetchAll().map((each)=>
     {
@@ -174,7 +174,7 @@ router.post('/:product_id/update', async (req, res) => {
         }
     })
 })
-router.get('/:product_id/delete', async(req,res)=>{
+router.get('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
     // fetch the product that we want to delete
     const product = await Shoe.where({
         'id': req.params.product_id
@@ -186,7 +186,7 @@ router.get('/:product_id/delete', async(req,res)=>{
         'product': product.toJSON()
     })
 });
-router.post('/:product_id/delete', async(req,res)=>{
+router.post('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
     // fetch the product that we want to delete
     const product = await Shoe.where({
         'id': req.params.product_id
@@ -196,7 +196,7 @@ router.post('/:product_id/delete', async(req,res)=>{
     await product.destroy();
     res.redirect('/products')
 })
-router.get('/:product_id/variants', async (req,res)=>{
+router.get('/:product_id/variants',checkIfAuthenticated, async (req,res)=>{
 
     const productId = req.params.product_id;
     
@@ -222,7 +222,7 @@ router.get('/:product_id/variants', async (req,res)=>{
                'variants': variantDisplay.toJSON(),
     })
 })
-router.get('/:product_id/variants/create', async(req,res)=>
+router.get('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=>
 {
     const color = await Color.fetchAll().map((each)=>
     {
@@ -243,7 +243,7 @@ router.get('/:product_id/variants/create', async(req,res)=>
     })
 })
 
-router.post('/:product_id/variants/create', async(req,res)=>
+router.post('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=>
 {
     const color = await Color.fetchAll().map((each)=>
     {
@@ -298,7 +298,7 @@ router.post('/:product_id/variants/create', async(req,res)=>
     })
 })
 
-router.get('/:product_id/variants/:variant_id/update',async(req,res)=>
+router.get('/:product_id/variants/:variant_id/update',checkIfAuthenticated,async(req,res)=>
 {
     const color = await Color.fetchAll().map((each)=>
     {
@@ -329,7 +329,7 @@ router.get('/:product_id/variants/:variant_id/update',async(req,res)=>
   
 })
 
-router.post('/:product_id/variants/:variant_id/update', async(req,res)=>
+router.post('/:product_id/variants/:variant_id/update',checkIfAuthenticated, async(req,res)=>
 {
     const color = await Color.fetchAll().map((each)=>
     {
@@ -371,7 +371,7 @@ router.post('/:product_id/variants/:variant_id/update', async(req,res)=>
 })
 
 
-router.get('/:product_id/variants/:variant_id/delete', async (req,res)=> {
+router.get('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, async (req,res)=> {
     let shoe = await Shoe.where({
         "id": req.params.product_id
     }).fetch(
@@ -391,7 +391,7 @@ router.get('/:product_id/variants/:variant_id/delete', async (req,res)=> {
         'shoes': shoe.toJSON()
     })
 })
-router.post('/:product_id/variants/:variant_id/delete', async (req,res)=> {
+router.post('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, async (req,res)=> {
     
     let variantDisplay = await Variant.where({
         'id':req.params.variant_id
