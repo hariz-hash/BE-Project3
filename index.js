@@ -29,7 +29,7 @@ app.use(
 // set up sessions
 app.use(session({
   store: new FileStore(),
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET_KEY,
   resave: false,
   saveUninitialized: true
 }))
@@ -44,8 +44,22 @@ app.use(function (req, res, next) {
   next();
 });
 
+// enable CSRF
+app.use(csrf());
 
+app.use(function(req,res,next){
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
 
+app.use(function (err, req, res, next) {
+  if (err && err.code == "EBADCSRFTOKEN") {
+      req.flash('error_messages', 'The form has expired. Please try again');
+      res.redirect('back');
+  } else {
+      next()
+  }
+});
 const landingRoutes = require('./routes/landing')
 const productRoutes = require('./routes/product')
 const userRoutes = require('./routes/users')
