@@ -3,17 +3,17 @@ const router = express.Router();
 const { checkIfAuthenticated } = require('../middlewares');
 // #1 import in the Product model
 const { bootstrapField, createProductForm, createVariantForm } = require('../forms');
-const {Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size} = require('../models')
+const { Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size } = require('../models')
 
-router.get('/',checkIfAuthenticated, async (req,res)=>{
+router.get('/', checkIfAuthenticated, async (req, res) => {
     // #2 - fetch all the products (ie, SELECT * from products)
     let shoes = await Shoe.collection().fetch({
-        withRelated:['brand','gender','materials']
+        withRelated: ['brand', 'gender', 'materials']
     });
 
     // console.log(shoes.toJSON());
     let variant = await Variant.collection().fetch({
-        withRelated:['color','size','shoe']
+        withRelated: ['color', 'size', 'shoe']
     });
 
     res.render('products/index', {
@@ -21,51 +21,42 @@ router.get('/',checkIfAuthenticated, async (req,res)=>{
         'variants': variant.toJSON(),
     })
 })
-router.get('/create',checkIfAuthenticated, async (req,res)=>{
-    const brands = await Brand.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('brand')]
+router.get('/create', checkIfAuthenticated, async (req, res) => {
+    const brands = await Brand.fetchAll().map((each) => {
+        return [each.get('id'), each.get('brand')]
     })
-    const genders = await Gender.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('gender')]
+    const genders = await Gender.fetchAll().map((each) => {
+        return [each.get('id'), each.get('gender')]
 
     })
-    const materials = await Material.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('materials')]
+    const materials = await Material.fetchAll().map((each) => {
+        return [each.get('id'), each.get('materials')]
 
     })
-    const productForm = createProductForm(brands,genders,materials);
-    res.render('products/create',{
+    const productForm = createProductForm(brands, genders, materials);
+    res.render('products/create', {
         'form': productForm.toHTML(bootstrapField),
         'cloudinaryName': process.env.CLOUDINARY_NAME,
         'cloudinaryApiKey': process.env.CLOUDINARY_API_KEY,
         'cloudinaryPreset': process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
-router.post('/create',checkIfAuthenticated, async (req,res)=>
-{
-    const brands = await Brand.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('brand')]
+router.post('/create', checkIfAuthenticated, async (req, res) => {
+    const brands = await Brand.fetchAll().map((each) => {
+        return [each.get('id'), each.get('brand')]
     })
-    const genders = await Gender.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('gender')]
+    const genders = await Gender.fetchAll().map((each) => {
+        return [each.get('id'), each.get('gender')]
 
     })
-    const materials = await Material.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('materials')]
+    const materials = await Material.fetchAll().map((each) => {
+        return [each.get('id'), each.get('materials')]
     })
 
-
-
-    const productForm = createProductForm(brands,genders,materials);
-    productForm.handle(req,{
-        success: async (form)=>{
-            let {materials,...productData} = form.data;
+    const productForm = createProductForm(brands, genders, materials);
+    productForm.handle(req, {
+        success: async (form) => {
+            let { materials, ...productData } = form.data;
             const product = new Shoe();
             console.log(materials)
             await product.save(productData);
@@ -76,27 +67,36 @@ router.post('/create',checkIfAuthenticated, async (req,res)=>
             req.flash("success_messages", `New Product ${product.get('model')} has been created`)
             res.redirect('/products')//where does this url comes from 
         },
+        'empty': async function (form) {
+            // executed if the user just submit without any input
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
+            })
+        },
         'error': async (form) => {
             res.render('products/create', {
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
             })
         }
     })
 })
-router.get('/:product_id/update',checkIfAuthenticated, async (req, res) => {
+router.get('/:product_id/update', checkIfAuthenticated, async (req, res) => {
     // retrieve the product
-    const brands = await Brand.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('brand')]
+    const brands = await Brand.fetchAll().map((each) => {
+        return [each.get('id'), each.get('brand')]
     })
-    const genders = await Gender.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('gender')]
+    const genders = await Gender.fetchAll().map((each) => {
+        return [each.get('id'), each.get('gender')]
 
     })
-    const materials = await Material.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('materials')]
+    const materials = await Material.fetchAll().map((each) => {
+        return [each.get('id'), each.get('materials')]
 
     })
     const productId = req.params.product_id
@@ -104,10 +104,10 @@ router.get('/:product_id/update',checkIfAuthenticated, async (req, res) => {
         'id': productId
     }).fetch({
         require: true,
-        withRelated:['materials']
+        withRelated: ['materials']
     });
     console.log(productId)
-    const productForm = createProductForm(brands,genders,materials);
+    const productForm = createProductForm(brands, genders, materials);
 
     // // fill in the existing values
     productForm.fields.model.value = product.get('model');
@@ -115,29 +115,30 @@ router.get('/:product_id/update',checkIfAuthenticated, async (req, res) => {
     productForm.fields.shoe_type.value = product.get('shoe_type');
     productForm.fields.brand_id.value = product.get('brand_id');
     productForm.fields.gender_id.value = product.get('gender_id');
-    
+    productForm.fields.image_url.value = product.get('image_url');
+    productForm.fields.thumbnail_url.value = product.get('thumbnail_url');
     let selectedMaterials = await product.related('materials').pluck('id');
     productForm.fields.materials.value = selectedMaterials;
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product.toJSON()
+        'product': product.toJSON(),
+        "cloudinaryName": process.env.CLOUDINARY_NAME,
+        "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+        "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
-router.post('/:product_id/update',checkIfAuthenticated, async (req, res) => {
+router.post('/:product_id/update', checkIfAuthenticated, async (req, res) => {
     // fetch the product that we want to update
-    const brands = await Brand.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('brand')]
+    const brands = await Brand.fetchAll().map((each) => {
+        return [each.get('id'), each.get('brand')]
     })
-    const genders = await Gender.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('gender')]
+    const genders = await Gender.fetchAll().map((each) => {
+        return [each.get('id'), each.get('gender')]
 
     })
-    const materials = await Material.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('materials')]
+    const materials = await Material.fetchAll().map((each) => {
+        return [each.get('id'), each.get('materials')]
     })
 
     const productId = req.params.product_id;
@@ -145,14 +146,14 @@ router.post('/:product_id/update',checkIfAuthenticated, async (req, res) => {
         'id': productId
     }).fetch({
         require: true,
-        withRelated:['materials']
+        withRelated: ['materials']
     });
 
     // process the form
-    const productForm = createProductForm(brands,genders,materials);
+    const productForm = createProductForm(brands, genders, materials);
     productForm.handle(req, {
         'success': async (form) => {
-            let{materials,...productData} = form.data;
+            let { materials, ...productData } = form.data;
             product.set(productData);
             product.save();
             //update tags
@@ -165,16 +166,26 @@ router.post('/:product_id/update',checkIfAuthenticated, async (req, res) => {
             await product.materials().attach(materialIds);
 
             res.redirect('/products');
+        }, 'empty': async function (form) {
+            // executed if the user just submit without any input
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
+            })
         },
         'error': async (form) => {
-            res.render('products/update', {
+            res.render('products/create', {
                 'form': form.toHTML(bootstrapField),
-                'product': product.toJSON()
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
             })
         }
     })
 })
-router.get('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
+router.get('/:product_id/delete', checkIfAuthenticated, async (req, res) => {
     // fetch the product that we want to delete
     const product = await Shoe.where({
         'id': req.params.product_id
@@ -186,7 +197,7 @@ router.get('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
         'product': product.toJSON()
     })
 });
-router.post('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
+router.post('/:product_id/delete', checkIfAuthenticated, async (req, res) => {
     // fetch the product that we want to delete
     const product = await Shoe.where({
         'id': req.params.product_id
@@ -196,46 +207,43 @@ router.post('/:product_id/delete',checkIfAuthenticated, async(req,res)=>{
     await product.destroy();
     res.redirect('/products')
 })
-router.get('/:product_id/variants',checkIfAuthenticated, async (req,res)=>{
+router.get('/:product_id/variants', checkIfAuthenticated, async (req, res) => {
 
     const productId = req.params.product_id;
-    
+
     let shoe = await Shoe.where({
         "id": productId
     }).fetch(
         {
-            withRelated:['brand','gender','materials']
+            withRelated: ['brand', 'gender', 'materials']
         }
     )
-        console.log(shoe);
+    console.log(shoe);
     let variantDisplay = await Variant.where({
-        'shoe_id':productId
+        'shoe_id': productId
     }).fetchAll(
         {
             require: false,
-            withRelated:['color','size']
+            withRelated: ['color', 'size']
         }
     )
-   
-    res.render('products/variants',{
-               'shoes': shoe.toJSON(),
-               'variants': variantDisplay.toJSON(),
+
+    res.render('products/variants', {
+        'shoes': shoe.toJSON(),
+        'variants': variantDisplay.toJSON(),
     })
 })
-router.get('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=>
-{
-    const color = await Color.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('color')]
+router.get('/:product_id/variants/create', checkIfAuthenticated, async (req, res) => {
+    const color = await Color.fetchAll().map((each) => {
+        return [each.get('id'), each.get('color')]
     })
-    const size = await Size.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('size')]
+    const size = await Size.fetchAll().map((each) => {
+        return [each.get('id'), each.get('size')]
     })
 
-    const productForm = createVariantForm(color,size)
-    console.log({productForm})
-    res.render('products/create-variant',{
+    const productForm = createVariantForm(color, size)
+    console.log({ productForm })
+    res.render('products/create-variant', {
         'form': productForm.toHTML(bootstrapField),
         'cloudinaryName': process.env.CLOUDINARY_NAME,
         'cloudinaryApiKey': process.env.CLOUDINARY_API_KEY,
@@ -243,15 +251,12 @@ router.get('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=>
     })
 })
 
-router.post('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=>
-{
-    const color = await Color.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('color')]
+router.post('/:product_id/variants/create', checkIfAuthenticated, async (req, res) => {
+    const color = await Color.fetchAll().map((each) => {
+        return [each.get('id'), each.get('color')]
     })
-    const size = await Size.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('size')]
+    const size = await Size.fetchAll().map((each) => {
+        return [each.get('id'), each.get('size')]
     })
 
     // let shoe = await Shoe.where({
@@ -272,84 +277,94 @@ router.post('/:product_id/variants/create',checkIfAuthenticated, async(req,res)=
     // )
     const productId = req.params.product_id;
 
-    const productForm = createVariantForm(color,size)
-    productForm.handle(req,{
-        success: async (form)=>{
-            const dataIn ={...form.data};
-            console.log({dataIn})
+    const productForm = createVariantForm(color, size)
+    productForm.handle(req, {
+        success: async (form) => {
+            const dataIn = { ...form.data };
+            console.log({ dataIn })
             const variantData = {
                 shoe_id: req.params.product_id,
                 ...form.data
             };
-            console.log({variantData})
+            console.log({ variantData })
             const variant = new Variant();
             await variant.save(variantData);
-         
+
             req.flash("success_messages", `New variant  has been added`)
             // res.redirect('/products')//where does this url comes from 
             res.redirect(`/products/${req.params.product_id}/variants`);
 
+        }, 'empty': async function (form) {
+            // executed if the user just submit without any input
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
+            })
         },
         'error': async (form) => {
             res.render('products/create', {
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
             })
         }
     })
 })
 
-router.get('/:product_id/variants/:variant_id/update',checkIfAuthenticated,async(req,res)=>
-{
-    const color = await Color.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('color')]
+router.get('/:product_id/variants/:variant_id/update', checkIfAuthenticated, async (req, res) => {
+    const color = await Color.fetchAll().map((each) => {
+        return [each.get('id'), each.get('color')]
     })
-    const size = await Size.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('size')]
+    const size = await Size.fetchAll().map((each) => {
+        return [each.get('id'), each.get('size')]
     })
 
     let variantDisplay = await Variant.where({
-        'id':req.params.variant_id
+        'id': req.params.variant_id
     }).fetch(
         {
             require: false,
-            withRelated:['color','size']
+            withRelated: ['color', 'size']
         }
     )
-    const variantForm = createVariantForm(color,size);
+    const variantForm = createVariantForm(color, size);
     variantForm.fields.cost.value = variantDisplay.get('cost');
     variantForm.fields.stock.value = variantDisplay.get('stock');
     variantForm.fields.color_id.value = variantDisplay.get('color_id');
     variantForm.fields.size_id.value = variantDisplay.get('size_id');
+    variantForm.fields.image_url.value = variantDisplay.get('image_url');
+    variantForm.fields.thumbnail_url.value = variantDisplay.get('thumbnail_url');
     res.render('products/update-variant', {
-        variant: variantDisplay.toJSON(),
-        form: variantForm.toHTML(bootstrapField)
-      });
-  
+        'variant': variantDisplay.toJSON(),
+        'form': variantForm.toHTML(bootstrapField),
+        "cloudinaryName": process.env.CLOUDINARY_NAME,
+        "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+        "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
+    });
+
 })
 
-router.post('/:product_id/variants/:variant_id/update',checkIfAuthenticated, async(req,res)=>
-{
-    const color = await Color.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('color')]
+router.post('/:product_id/variants/:variant_id/update', checkIfAuthenticated, async (req, res) => {
+    const color = await Color.fetchAll().map((each) => {
+        return [each.get('id'), each.get('color')]
     })
-    const size = await Size.fetchAll().map((each)=>
-    {
-        return[each.get('id'), each.get('size')]
+    const size = await Size.fetchAll().map((each) => {
+        return [each.get('id'), each.get('size')]
     })
     let variantDisplay = await Variant.where({
-        'id':req.params.variant_id
+        'id': req.params.variant_id
     }).fetch(
         {
             require: false,
-            withRelated:['color','size']
+            withRelated: ['color', 'size']
         }
     )
-    const variantForm = createVariantForm(color,size);
-    variantForm.handle(req,{
-        success: async (form)=>{
+    const variantForm = createVariantForm(color, size);
+    variantForm.handle(req, {
+        success: async (form) => {
             const variantData = {
                 ...form.data,
                 shoe_id: req.params.product_id
@@ -358,32 +373,44 @@ router.post('/:product_id/variants/:variant_id/update',checkIfAuthenticated, asy
             // const variant = new Variant();
             variantDisplay.set(variantData)
             await variantDisplay.save();
-         
+
             req.flash("success_messages", `New variant  has been added`)
             res.redirect(`/products/${req.params.product_id}/variants`);
         },
+        'empty': async function (form) {
+            // executed if the user just submit without any input
+            res.render('products/create', {
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
+            })
+        },
         'error': async (form) => {
             res.render('products/create', {
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                "cloudinaryName": process.env.CLOUDINARY_NAME,
+                "cloudinaryApiKey": process.env.CLOUDINARY_API_KEY,
+                "cloudinaryPreset": process.env.CLOUDINARY_UPLOAD_PRESET
             })
         }
-     })
+    })
 })
 
 
-router.get('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, async (req,res)=> {
+router.get('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, async (req, res) => {
     let shoe = await Shoe.where({
         "id": req.params.product_id
     }).fetch(
         {
-            withRelated:['brand','gender','materials']
+            withRelated: ['brand', 'gender', 'materials']
         }
     )
     let variantDisplay = await Variant.where({
-        'id':req.params.variant_id
+        'id': req.params.variant_id
     }).fetchAll(
         {
-            withRelated:['color','size']
+            withRelated: ['color', 'size']
         }
     )
     res.render('products/delete-variant', {
@@ -391,14 +418,14 @@ router.get('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, asyn
         'shoes': shoe.toJSON()
     })
 })
-router.post('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, async (req,res)=> {
-    
+router.post('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, async (req, res) => {
+
     let variantDisplay = await Variant.where({
-        'id':req.params.variant_id
+        'id': req.params.variant_id
     }).fetch(
         {
             require: false,
-            withRelated:['color','size']
+            withRelated: ['color', 'size']
         }
     )
     await variantDisplay.destroy()
@@ -407,4 +434,4 @@ router.post('/:product_id/variants/:variant_id/delete',checkIfAuthenticated, asy
 
 })
 
-module.exports = router ;
+module.exports = router;

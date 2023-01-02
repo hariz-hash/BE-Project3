@@ -6,11 +6,19 @@
     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     {{{form}}}
     <div>
-        <a href="#" class="btn btn-primary" id="upload_widget">Upload</a>
-        <img src="" style="display:none" id="uploaded_image" />
+        <a href="#" id="upload_widget" class="btn btn-primary">Upload Image</a>
     </div>
-    <input type="submit" value="Add Product" class="btn btn-primary" />
+    <div>
+        {{#if variant.thumbnail_url}}
+        <img src="{{variant.thumbnail_url}}" id="uploaded_image" />
+        {{else}}
+        <img src="" id="uploaded_image" style="display:none" /> lol
+        {{/if}}
+    </div>
+    <input type="submit" class="btn btn-primary mt-3" />
+
 </form>
+
 {{/block}}
 {{#block "js"}}
 
@@ -48,9 +56,11 @@
         // check if the image is uploaded successfully
         if (!error && result && result.event == "success") {
             const url = result.info.url;
-            document.querySelector("#id_image_url").value = url;
-            document.querySelector("#uploaded_image").src = url;
-            document.querySelector("#uploaded_image").style.display = "inline";
+
+            document.querySelector('#id_image_url').value = result.info.url;
+            document.querySelector('#uploaded_image').src = result.info.thumbnail_url;
+            document.querySelector('#uploaded_image').style.display = 'inline';
+            document.querySelector('#id_thumbnail_url').value = result.info.thumbnail_url;
         }
     })
     document.querySelector("#upload_widget").addEventListener("click", function () {
@@ -58,4 +68,5 @@
     })
 </script>
 {{/block}}
+
 {{/extends}}

@@ -9,6 +9,8 @@
                 <p>Are you sure you want to delete the following variant?</p>
 
                 <form method="POST">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+
                     {{!-- <input type="hidden" name="_csrf" value="{{csrfToken}}" /> --}}
                     <div class="custom-btn-group">
                         <a href="/products/{{shoes.id}}/variants"

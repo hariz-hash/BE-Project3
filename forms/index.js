@@ -77,14 +77,31 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             widget: widgets.multipleSelect(),
             choices:materials
         }),
-        'image_url': fields.url({
+        // 'image_url': fields.url({
+        //     required: validators.required('Image required'),
+        //     errorAfterField: true,
+        //     validators: [validators.url()],
+        //     widget: forms.widgets.hidden()
+        // }),
+        // 'thumbnail_url': fields.url({
+        //     widget: forms.widgets.hidden()
+        // })
+        'image_url': fields.string({
             required: validators.required('Image required'),
+            required: false,
             errorAfterField: true,
-            validators: [validators.url()],
-            widget: forms.widgets.hidden()
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.hidden()
         }),
-        'thumbnail_url': fields.url({
-            widget: forms.widgets.hidden()
+        'thumbnail_url': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.hidden()
         })
     })
 };
