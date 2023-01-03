@@ -1,0 +1,26 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+<ul class="list-group">
+    {{#each cart}}
+    <li class="list-group-item">
+        <h4>Cost: {{this.variant.cost}}</h4>
+        <h4>Quantity: {{this.quantity}}</h4>
+        <h4>Color: {{this.variant.color.color}}</h4>
+        <h4>Size: {{this.variant.size.size}}</h4>
+        <h4> Model{{this.variant.shoe}}</h4>
+       <form method="POST" action="/carts/{{this.variant.id}}/update">
+            <input type="hidden" name="_csrf" value="{{../csrfToken}}"/>
+            <h5>Quantity: <input type="text" value="{{this.quantity}}"
+                    name="newQty" style="width:50px" /></h5>
+                    <input type="submit" value="Update Quantity" class="btn btn-primary btn-sm"/>
+        </form>
+    </li>
+
+    {{/each}}
+</ul>
+
+
+{{/block}}
+
+{{/extends}}

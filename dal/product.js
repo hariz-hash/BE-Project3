@@ -36,7 +36,7 @@ async function getAllSize() {
     return allSize;
 }
 
-async function getVariantById(productId) {
+async function getVariantByIdwithProduct(productId) {
     const variant = await Variant.where({
         'shoe_id': productId
     }).fetchAll(
@@ -47,6 +47,19 @@ async function getVariantById(productId) {
     )
     return variant;
 }
+
+async function getVariantById(productId) {
+    const variant = await Variant.where({
+        'id': productId
+    }).fetchAll(
+        {
+            require: false,
+            withRelated: ['color', 'size']
+        }
+    )
+    return variant;
+}
+
 
 async function getProductById(productId) {
     const product = await Shoe.where({
@@ -67,5 +80,6 @@ module.exports =
     getAllSize, 
     getProductById, 
     getVariantById, 
-    getAllMaterials
+    getAllMaterials,
+    getVariantByIdwithProduct
 }

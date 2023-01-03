@@ -69,6 +69,10 @@ const Variant = bookshelf.model("Variant",{
     orders()
     {
         return this.belongsToMany('Order');//many to many
+    },
+    cartItems()
+    {
+        return this.hasMany('CartItem');
     }
 })
 
@@ -102,6 +106,10 @@ const User = bookshelf.model("User",{
     variants()
     {
         return this.belongsToMany('Variant');//many to many
+    },
+    cartItems()
+    {
+        return this.hasMany('CartItem');
     }
     
 })
@@ -138,7 +146,7 @@ const Role = bookshelf.model("Role",{
     },
 })
 
-const cartItem = bookshelf.model("CartItem",
+const CartItem = bookshelf.model("CartItem",
 {
     tableName: 'cart_items',
     user()
@@ -151,4 +159,4 @@ const cartItem = bookshelf.model("CartItem",
     }
 })
 
-module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material, cartItem };
+module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material, CartItem };
