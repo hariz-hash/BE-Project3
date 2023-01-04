@@ -209,4 +209,62 @@ const createLoginForm = () =>
     })
 }
 
+
+const searchProductForm = (brands,genders,materials=[]) => { // add materials
+    return forms.create({
+        'model': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'description': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'shoe_type': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'brand_id': fields.string({
+            label:'Brands',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: brands
+        }),
+        'gender_id': fields.string({
+            label:'Gender',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: genders
+        }),
+        'materials': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.multipleSelect(),
+            choices:materials
+        }),
+
+    })
+};
+
+
 module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm, createLoginForm };
