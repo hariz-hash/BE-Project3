@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/',checkIfAuthenticated ,async function(req,res){
     // let cart = new CartServices(req.session.user.id);
     let cart = await getUserCart(req.session.user.id)
+    console.log(cart.toJSON())
     return res.render('cart/index', {
         'cart': cart.toJSON()
     })

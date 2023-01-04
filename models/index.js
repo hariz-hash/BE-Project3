@@ -14,7 +14,7 @@ const Shoe = bookshelf.model('Shoe', {
     },
     variants()
     {
-        return this.hasMany('Variant','shoe_id')
+        return this.hasMany('Variant')
     },// issue here
     //many to many  on material_shoes with material
     materials()
