@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { checkIfAuthenticated } = require('../middlewares');
 // #1 import in the Product model
-const { bootstrapField, createProductForm, createVariantForm } = require('../forms');
+const { bootstrapField, createProductForm, createVariantForm, searchProductForm } = require('../forms');
 const { Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size } = require('../models')
+const datalayer = require('../dal/product');
 
 router.get('/', checkIfAuthenticated, async (req, res) => {
     // #2 - fetch all the products (ie, SELECT * from products)
@@ -15,11 +16,71 @@ router.get('/', checkIfAuthenticated, async (req, res) => {
     let variant = await Variant.collection().fetch({
         withRelated: ['color', 'size', 'shoe']
     });
+    const allBrands = await datalayer.getAllBrands();
+    allBrands.unshift([0, '--- Any Brand ---']);
+    const allGender = await datalayer.getAllGenders();
+    allGender.unshift([0, '--- Any Brand ---']);
+    const allMaterials = await datalayer.getAllMaterials();
 
-    res.render('products/index', {
-        'shoes': shoes.toJSON(),
-        'variants': variant.toJSON(),
+    let searchForm = searchProductForm(allBrands, allGender, allMaterials);
+    let q = Shoe.collection()
+
+    console.log({ searchForm })
+    searchForm.handle(req, {
+        'empty': async (form) => {
+            let shoes = await q.fetch({
+                withRelated: ['brand', 'gender', 'materials']
+            })
+            res.render('products/index', {
+                'shoes': shoes.toJSON(),
+                'form': searchForm.toHTML(bootstrapField)
+            })
+        },
+        'error': async (form) => {
+            let shoes = await q.fetch({
+                withRelated: ['brand', 'gender', 'materials']
+            })
+            res.render('products/index', {
+                'shoes': shoes.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'success': async (form) => {
+            if (form.data.model) {
+                q.where('model', 'like', '%' + form.data.model + '%')
+            }
+            if (form.data.shoe_type) {
+                q.where('shoe_type', 'like', '%' + form.data.shoe_type + '%')
+            }
+            if (form.data.brand_id && form.data.brand_id !== "0") {
+                q.where('brand_id', '=', form.data.brand_id)
+            }
+            if (form.data.gender_id && form.data.gender_id !== "0") {
+                q.where('gender_id', '=', form.data.gender_id)
+            }
+            if (form.data.materials) {
+                // ...JOIN products_tags ON products.id = products_tags.product_id
+                q.query('join', 'materials_shoes', 'shoes.id', 'shoe_id')
+                    .where('material_id', 'in', form.data.materials.split(','))
+            }
+            
+            const products = await q.fetch({
+                withRelated:['gender', 'brand', 'materials'] // for each product, load in each of the tag
+            });
+            res.render('products/index', {
+                'shoes': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+
+        }
     })
+
+    // res.render('products/index', {
+    //     'shoes': shoes.toJSON(),
+    //     'variants': variant.toJSON(),
+    //     'form': searchForm.toHTML(bootstrapField),
+
+    // })
 })
 router.get('/create', checkIfAuthenticated, async (req, res) => {
     const brands = await Brand.fetchAll().map((each) => {

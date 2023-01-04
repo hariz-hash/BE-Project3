@@ -1,8 +1,14 @@
 {{#extends 'base'}}
 
 {{#block 'content'}}
-    <a href="/users/logout" class="btn btn-danger btn-sm">LogOut</a>
 
+{{!-- <a href="/users/logout" class="btn btn-danger btn-sm">LogOut</a> --}}
+<form method="GET">
+    {{{form}}}
+    <a href="/products" class="btn btn-secondary mx-1">Reset</a>
+
+    <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search" />
+</form>
 <h1> Add new product</h1>
 <table class="table">
     <thead>
@@ -20,43 +26,43 @@
     </thead>
     <tbody>
         {{#each shoes}}
-            <tr>
-                <td>
-                    {{this.id}}
-                </td>
-                <td>
-                    {{this.model}}
-                </td>
-                <td>
-                    {{this.description}}
-                </td>
-                <td>
-                    {{this.shoe_type}}
-                </td>
-                <td>
-                    {{this.brand.brand}}
-                </td>
-                 <td>
-                    {{this.gender.gender}}
-                </td>
-                <td>
+        <tr>
+            <td>
+                {{this.id}}
+            </td>
+            <td>
+                {{this.model}}
+            </td>
+            <td>
+                {{this.description}}
+            </td>
+            <td>
+                {{this.shoe_type}}
+            </td>
+            <td>
+                {{this.brand.brand}}
+            </td>
+            <td>
+                {{this.gender.gender}}
+            </td>
+            <td>
                 {{#each this.materials}}
-                    <span class="badge bg-primary">{{this.materials}}</span>
+                <span class="badge bg-primary">{{this.materials}}</span>
                 {{/each}}
-                </td>
-               <td>
-            {{!-- <img src='{{this.image_url}}' alt='shoe image' /> --}}
-            <img src='{{this.thumbnail_url}}' alt='shoe image' />
-          </td>
+            </td>
+            <td>
+                {{!-- <img src='{{this.image_url}}' alt='shoe image' /> --}}
+                <img src='{{this.thumbnail_url}}' alt='shoe image' />
+            </td>
             <td>
                 <a href="/products/{{this.id}}/variants" class="btn btn-warning btn-sm">Variants</a>
                 <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm">Update</a>
                 <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
             </td>
-            </tr>
+        </tr>
         {{/each}}
     </tbody>
 </table><br>
-    <a href="/products/create" class="btn btn-danger btn-sm">Add new products</a>
+<a href="/products/create" class="btn btn-danger btn-sm">Add new products</a>
 {{/block}}
 {{/extends}}

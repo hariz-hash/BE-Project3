@@ -214,21 +214,12 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
     return forms.create({
         'model': fields.string({
             required: false,
-            errorAfterField: true,
-            cssClasses: {
-                label: ['form-label']
-            }
-        }),
-        'description': fields.string({
-            required: false,
-            errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
             }
         }),
         'shoe_type': fields.string({
             required: false,
-            errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
             }
@@ -255,7 +246,6 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
         }),
         'materials': fields.string({
             required: false,
-            errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
             },
@@ -267,4 +257,4 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
 };
 
 
-module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm, createLoginForm };
+module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm, createLoginForm, searchProductForm };
