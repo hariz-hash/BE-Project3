@@ -12,7 +12,7 @@
         <h4>Size: {{this.variant.size.size}}</h4>
         <h4> Mode; : {{this.variant.shoe.model}}</h4>
         <form method="POST" action="/carts/{{this.variant.id}}/update">
-            {{!-- <input type="hidden" name="_csrf" value="{{../csrfToken}}" /> --}}
+            <input type="hidden" name="_csrf" value="{{../csrfToken}}" />
             <h5>Quantity: <input type="text" value="{{this.quantity}}" name="newQty" style="width:50px" /></h5>
             <input type="submit" value="Update Quantity" class="btn btn-primary btn-sm" />
         </form>

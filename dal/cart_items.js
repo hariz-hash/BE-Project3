@@ -6,7 +6,7 @@ const  getCart = async (userId) => {
             'user_id': userId
         }).fetch({
             require: false,
-            withRelated: ['user', 'variant.shoe', 'variant.color', 'variant.size']// check this
+            withRelated: ['user', 'variant', 'variant.color', 'variant.size']// check this
         });
 }
 
