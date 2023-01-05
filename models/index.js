@@ -60,7 +60,7 @@ const Variant = bookshelf.model("Variant",{
     },
     shoe()
     {
-        return this.belongsTo('Shoe')
+        return this.belongsTo('Shoe','shoe_id')
     },
     users()
     {

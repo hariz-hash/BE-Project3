@@ -45,7 +45,9 @@ app.use(function (req, res, next) {
 });
 
 // enable CSRF
-app.use(csrf());
+// app.use(csrf());
+
+//PROXY MIDDLEWARE
 
 app.use(function(req,res,next){
   res.locals.csrfToken = req.csrfToken();
