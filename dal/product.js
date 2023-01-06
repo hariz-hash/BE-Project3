@@ -51,7 +51,7 @@ async function getVariantByIdwithProduct(productId) {
 async function getVariantById(productId) {
     const variant = await Variant.where({
         'id': productId
-    }).fetchAll(
+    }).fetch(
         {
             require: false,
             withRelated: ['color', 'size']
@@ -72,6 +72,17 @@ async function getProductById(productId) {
     return product;
 }
 
+async function updateVariant(variantId, data)
+{
+    const variant = await getVariantById(variantId);
+    if(!variant)
+    {
+        return;
+    }
+    variant.set(data);
+    await variant.save();
+    return true
+}
 module.exports =
 {
     getAllBrands, 
@@ -81,5 +92,6 @@ module.exports =
     getProductById, 
     getVariantById, 
     getAllMaterials,
-    getVariantByIdwithProduct
+    getVariantByIdwithProduct,
+    updateVariant
 }

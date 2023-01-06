@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/',checkIfAuthenticated ,async function(req,res){
     // let cart = new CartServices(req.session.user.id);
     let cart = await getUserCart(req.session.user.id)
-    console.log(cart.toJSON())
+    // console.log(cart.toJSON())
     return res.render('cart/index', {
         'cart': cart.toJSON()
     })
@@ -16,6 +16,7 @@ router.get('/',checkIfAuthenticated ,async function(req,res){
 router.get('/:variant_id/add', checkIfAuthenticated,  async function(req,res){
     const userId = req.session.user.id;
     const variant_id = req.params.variant_id;
+    const quantity = req.body.quantity;
 
     await addToCart(userId, variant_id, 1);
     req.flash("success_messages", "The item has been added");

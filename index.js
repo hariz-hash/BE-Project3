@@ -47,7 +47,17 @@ app.use(function (req, res, next) {
 // enable CSRF
 // app.use(csrf());
 
+const csrfInstance = csrf(); // create an instance of the middleware
+app.use(function(req,res,next){
+  // check if the url we are accessing should excluded from csrf protection
+  if (req.url == "/checkout/process_payment" || req.url.slice(0, 5) == '/api/') {
+    return next();
+  }
+  csrfInstance(req,res,next);  // implement protection for all other routes 
+})
+
 //PROXY MIDDLEWARE
+
 
 app.use(function(req,res,next){
   res.locals.csrfToken = req.csrfToken();

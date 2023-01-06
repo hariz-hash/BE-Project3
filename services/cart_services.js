@@ -19,9 +19,9 @@ async function checkStock(variantId)
 async function addToCart(userId, variantId, quantity)
 {
     const cartItem = await cartDataLayer.getCartItemByUserAndProduct(userId, variantId);
-    console.log(userId)
-    console.log(variantId)
-    console.log(quantity)
+    // console.log(userId)
+    // console.log(variantId)
+    // console.log(quantity)
     const stock = await checkStock(variantId);
     console.log(variantId)
     if(cartItem)
