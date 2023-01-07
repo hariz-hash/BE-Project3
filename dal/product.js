@@ -54,7 +54,7 @@ async function getVariantById(productId) {
     }).fetch(
         {
             require: false,
-            withRelated: ['color', 'size']
+            withRelated: ['color', 'size', 'shoe']
         }
     )
     return variant;

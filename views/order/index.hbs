@@ -1,0 +1,62 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+{{!-- <a href="/users/logout" class="btn btn-danger btn-sm">LogOut</a> --}}
+{{!-- <form method="GET">
+    {{{form}}}
+    <a href="/products" class="btn btn-secondary mx-1">Reset</a>
+
+    <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search" />
+</form> --}}
+<h1> Add new product</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total Amount</th>
+            <th>payment type</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Order Date</th>
+            <th>Deliver Date</th>
+        </tr>
+    </thead>
+
+    {{#each orders}}
+    <tr>
+        <td>
+            {{this.id}}
+        </td>
+        <td>
+            {{this.total_amount}}
+        </td>
+        <td>
+            {{this.payment_type}}
+        </td>
+        <td>
+            {{this.user.username}}
+        </td>
+        <td>
+            {{this.user.email}}
+        </td>
+        <td>
+            {{this.shipping_address_line1}}<br>
+            {{this.shipping_address_line2}}
+            {{this.shipping_postal_code}},
+            {{this.shipping_country}}<br>
+        </td>
+        <td>{{moment this.order_date format="dddd, DD MMMM YYYY"}}</td>
+        <td></td>
+        <td> <a href="{{this.receipt_url}}" target="_blank" class="btn btn-secondary btn-sm">Receipt</a>
+        </td>
+    </tr>
+    {{/each}}
+    <tbody>
+
+    </tbody>
+</table><br>
+{{!-- <a href="/products/create" class="btn btn-danger btn-sm">Add new products</a> --}}
+{{/block}}
+{{/extends}}

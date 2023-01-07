@@ -157,6 +157,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             
         }
 
+        await cartServices.emptyOfCart(userId);
 
     }
     res.sendStatus(200);

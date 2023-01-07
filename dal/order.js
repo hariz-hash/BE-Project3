@@ -12,9 +12,28 @@ const addOrderItem = async function (orderItemDetails)
     await orderItems.save()
     return orderItems;
 }
+async function retrieveAllOrders(){
+    const allOrder = await Order.collection().orderBy('id','DESC').fetch
+    ({
+        required: false,
+        withRelated:['user', 'status']
+    })
+    return allOrder;
+}
+async function retrieveStatus(){
+    const retrieveStatus = await Status.fetchAll().map((each)=>
+    {
+        return [each.get('id'), each.get('order_status')]
+    })
+    return retrieveStatus;
+}
+
+
 module.exports =
 {
     addOrder,
-    addOrderItem
+    addOrderItem,
+    retrieveAllOrders,
+    retrieveStatus
     
 }

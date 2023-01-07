@@ -1,5 +1,6 @@
 const cartDataLayer = require('../dal/cart_items');
 const productDataLayer = require('../dal/product');
+const { CartItem } = require('../models');
 
 
 //GET ALL
@@ -47,10 +48,18 @@ async function setQuantity(userId, variantId, quantity) {
                .updateQuantity(userId, variantId, quantity);
 }
 
-
 //DELETE CART
 async function deleteFromCart(userId, variantId)
 {
     return await cartDataLayer.removeFromCart(userId, variantId)
 }
-module.exports = {getUserCart, setQuantity, checkStock, addToCart, deleteFromCart}
+async function emptyOfCart(userId)
+{
+    const cartList = await cartDataLayer.getCart(userId)
+    for( let i of cartList)
+    {
+        const variantID = i.get('variant_id');
+        await deleteFromCart(userId,variantID)
+    }
+}
+module.exports = {getUserCart, setQuantity, checkStock, addToCart, deleteFromCart, emptyOfCart}

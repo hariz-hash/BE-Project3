@@ -72,12 +72,14 @@ app.use(function (err, req, res, next) {
       next()
   }
 });
+
 const landingRoutes = require('./routes/landing')
 const productRoutes = require('./routes/product')
 const userRoutes = require('./routes/users')
 const cloudinaryRoutes = require('./routes/cloudinary.js')
 const cartRoutes = require('./routes/cart')
 const checkoutRoutes = require('./routes/checkout')
+const orderRoutes = require('./routes/order')
 
 // Share the user data with hbs files
 app.use(function(req,res,next){
@@ -92,6 +94,7 @@ async function main() {
  app.use('/cloudinary', cloudinaryRoutes);
  app.use('/carts', cartRoutes)
  app.use('/checkout', checkoutRoutes)
+ app.use('/order', orderRoutes)
 }
 
 main();
