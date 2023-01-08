@@ -25,31 +25,34 @@ var bootstrapField = function (name, object) {
     return '<div class="form-group">' + label + widget + error + '</div>';
 };
 
-const createProductForm = (brands,genders,materials=[]) => { // add materials
+const createProductForm = (brands, genders, materials = []) => { // add materials
     return forms.create({
         'model': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.maxlength(100)]
         }),
         'description': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.maxlength(200)]
         }),
         'shoe_type': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.maxlength(200)]
         }),
         'brand_id': fields.string({
-            label:'Brands',
+            label: 'Brands',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -59,7 +62,7 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             choices: brands
         }),
         'gender_id': fields.string({
-            label:'Gender',
+            label: 'Gender',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -75,17 +78,9 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
                 label: ['form-label']
             },
             widget: widgets.multipleSelect(),
-            choices:materials
+            choices: materials
         }),
-        // 'image_url': fields.url({
-        //     required: validators.required('Image required'),
-        //     errorAfterField: true,
-        //     validators: [validators.url()],
-        //     widget: forms.widgets.hidden()
-        // }),
-        // 'thumbnail_url': fields.url({
-        //     widget: forms.widgets.hidden()
-        // })
+
         'image_url': fields.string({
             required: validators.required('Image required'),
             required: false,
@@ -106,23 +101,23 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
     })
 };
 
- const createVariantForm = (colors,size) => //colors,shoeSize
+const createVariantForm = (colors, size) => //colors,shoeSize
 {
     return forms.create({
         'cost': fields.number({
             label: 'Cost',
             required: true,
             errorAfterField: true,
-            validators: [validators.integer()]
+            validators: [validators.integer(), validators.min(0)]
         }),
         'stock': fields.number({
             label: 'Stock',
             required: true,
             errorAfterField: true,
-            validators: [validators.integer()]
-        }),        
+            validators: [validators.integer(), validators.min(0)]
+        }),
         'color_id': fields.string({
-            label:'Color',
+            label: 'Color',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -132,7 +127,7 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             choices: colors
         }),
         'size_id': fields.string({
-            label:'size',
+            label: 'size',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -151,31 +146,33 @@ const createProductForm = (brands,genders,materials=[]) => { // add materials
             widget: forms.widgets.hidden()
         })
     })
-    
+
 };
 
-const createRegistrationForm = () =>
-{
+const createRegistrationForm = () => {
     return forms.create({
-        'username':fields.string({
-            required:true,
-            cssClasses:{
-                label:['form-label']
-            }
+        'username': fields.string({
+            required: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators: [validators.maxlength(100)],
         }),
         'password': fields.password({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.maxlength(100)],
         }),
         'email': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.maxlength(200)],
         }),
         'confirm_password': fields.password({
             required: true,
@@ -188,8 +185,7 @@ const createRegistrationForm = () =>
     })
 }
 
-const createLoginForm = () =>
-{
+const createLoginForm = () => {
     return forms.create({
         'password': fields.password({
             required: true,
@@ -203,14 +199,14 @@ const createLoginForm = () =>
             errorAfterField: true,
             cssClasses: {
                 label: ['form-label']
-            }
+            },
+            validators: [validators.email()]
         })
-       
+
     })
 }
 
-
-const searchProductForm = (brands,genders,materials=[]) => { // add materials
+const searchProductForm = (brands, genders, materials = []) => { // add materials
     return forms.create({
         'model': fields.string({
             required: false,
@@ -225,7 +221,7 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
             }
         }),
         'brand_id': fields.string({
-            label:'Brands',
+            label: 'Brands',
             required: false,
             errorAfterField: true,
             cssClasses: {
@@ -235,7 +231,7 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
             choices: brands
         }),
         'gender_id': fields.string({
-            label:'Gender',
+            label: 'Gender',
             required: false,
             errorAfterField: true,
             cssClasses: {
@@ -250,11 +246,56 @@ const searchProductForm = (brands,genders,materials=[]) => { // add materials
                 label: ['form-label']
             },
             widget: widgets.multipleSelect(),
-            choices:materials
+            choices: materials
         }),
 
     })
 };
 
+const searchOrderForm = (status) => {
+    return forms.create({
 
-module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm, createLoginForm, searchProductForm };
+        'min_cost': fields.number({
+            label: 'min cost',
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer(), validators.min(0)]
+        }),
+        'max_cost': fields.number({
+            label: 'max cost',
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer(), validators.min(0)]
+        }),
+        'shipping_postal_code': fields.string({
+            label: 'Postal Code',
+            required: false,
+            errorAfterField: true,
+            validators: [validators.maxlength(20)]
+
+        }),
+        'order_status_id': fields.number({
+            label: 'Order status',
+            required: true,
+            errorAfterField: true,
+            choices: status,
+            widget: widgets.select()
+        })
+
+    })
+}
+
+const updateStatusForm = (status) => {
+    return forms.create({
+        'order_status_id': fields.string({
+            label: 'Order status',
+            required: true,
+            errorAfterField: true,
+            widget: widgets.select(),
+            choices: status,
+        })
+    })
+}
+
+
+module.exports = { createProductForm, bootstrapField, createVariantForm, createRegistrationForm, createLoginForm, searchProductForm, updateStatusForm, searchOrderForm };

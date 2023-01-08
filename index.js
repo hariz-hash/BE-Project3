@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf= require('csurf');
 require("dotenv").config();
+hbs.registerHelper('dateFormat', require('handlebars-dateformat'));
 
 // create an instance of express app
 let app = express();
@@ -73,6 +74,14 @@ app.use(function (err, req, res, next) {
   }
 });
 
+const api = {
+  product : require('./routes/api/product'),
+  user: require('./routes/api/user'),
+  cart: require('./routes/api/cart'),
+  checkout: require('./routes/api/checkout')
+
+}
+
 const landingRoutes = require('./routes/landing')
 const productRoutes = require('./routes/product')
 const userRoutes = require('./routes/users')
@@ -95,10 +104,14 @@ async function main() {
  app.use('/carts', cartRoutes)
  app.use('/checkout', checkoutRoutes)
  app.use('/order', orderRoutes)
+ app.use('/api/products', api.product);
+ app.use('/api/user', api.user);
+ app.use('/api/cart', api.cart);
+ app.use('/api/checkout', api.checkout);
 }
 
 main();
 
-app.listen(3012, () => {
+app.listen(3030, () => {
   console.log("Server has started");
 });

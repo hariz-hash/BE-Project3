@@ -82,7 +82,21 @@ async function updateVariant(variantId, data)
     variant.set(data);
     await variant.save();
     return true
-}
+};
+
+async function getAllProducts(variantId, data)
+{
+    const allProducts = await Shoe.fetchAll({
+        withRelated: ["gender","brand", "materials"],
+      });;
+   
+    return allProducts
+};
+// const getAllProducts = async () => {
+//     return await Shoe.fetchAll({
+//       withRelated: ["brand", "materials"],
+//     });
+//   };
 module.exports =
 {
     getAllBrands, 
@@ -93,5 +107,6 @@ module.exports =
     getVariantById, 
     getAllMaterials,
     getVariantByIdwithProduct,
-    updateVariant
+    updateVariant,
+    getAllProducts
 }

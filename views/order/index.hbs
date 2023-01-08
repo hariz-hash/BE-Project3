@@ -3,13 +3,13 @@
 {{#block 'content'}}
 
 {{!-- <a href="/users/logout" class="btn btn-danger btn-sm">LogOut</a> --}}
-{{!-- <form method="GET">
+<form method="GET">
     {{{form}}}
-    <a href="/products" class="btn btn-secondary mx-1">Reset</a>
+    <a href="/order" class="btn btn-secondary mx-1">Reset</a>
 
     <input type="submit" class="mb-3 mt-3 btn btn-primary" value="Search" />
-</form> --}}
-<h1> Add new product</h1>
+</form>
+<h1> Orders</h1>
 <table class="table">
     <thead>
         <tr>
@@ -21,6 +21,7 @@
             <th>Address</th>
             <th>Order Date</th>
             <th>Deliver Date</th>
+            <th>Status</th>
         </tr>
     </thead>
 
@@ -47,8 +48,14 @@
             {{this.shipping_postal_code}},
             {{this.shipping_country}}<br>
         </td>
-        <td>{{moment this.order_date format="dddd, DD MMMM YYYY"}}</td>
-        <td></td>
+        <td>{{dateFormat this.order_date "dddd, MMMM Do YYYY"}}</td>
+        {{#if this.delivery_date}}
+        <td>{{dateFormat this.delivery_date "dddd, MMMM Do YYYY"}}</td>
+        {{else}}
+        N/A
+        {{/if}}
+        <td>{{this.status.order_status}}</td>
+        <td><a href="order/update/{{this.id}}" class="btn btn-success btn-sm"/> Update</td>
         <td> <a href="{{this.receipt_url}}" target="_blank" class="btn btn-secondary btn-sm">Receipt</a>
         </td>
     </tr>
