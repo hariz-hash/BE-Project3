@@ -148,4 +148,6 @@ const CartItem = bookshelf.model("CartItem",
         }
     })
 
+
+
 module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material, CartItem, OrderItem };

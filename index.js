@@ -104,9 +104,9 @@ async function main() {
  app.use('/carts', cartRoutes)
  app.use('/checkout', checkoutRoutes)
  app.use('/order', orderRoutes)
- app.use('/api/products', api.product);
- app.use('/api/user', api.user);
- app.use('/api/cart', api.cart);
+ app.use('/api/product',express.json(), api.product);
+ app.use('/api/user',express.json(), api.user);
+ app.use('/api/cart',express.json(), api.cart);
  app.use('/api/checkout', api.checkout);
 }
 

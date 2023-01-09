@@ -6,6 +6,8 @@ const { searchOrderForm, updateStatusForm, bootstrapField } = require('../forms'
 const { Order } = require('../models')
 
 router.get('/', checkIfAuthenticated, async (req, res) => {
+    console.log('route called')
+    console.log(req.query)
     const orders = await dataLayer.retrieveAllOrders()
     const status = await dataLayer.retrieveStatus()
     //search form
@@ -31,8 +33,12 @@ router.get('/', checkIfAuthenticated, async (req, res) => {
             if (form.data.order_status_id) {
                 console.log(form.data.order_status_id)
                 q.where('order_status_id', '=', form.data.order_status_id)
-
             }
+
+            const orders = await q.fetch({
+                withRelated:['status', 'user'] // for each product, load in each of the tag
+            });
+
             res.render('order/index',
                 {
                     orders: orders.toJSON(),
