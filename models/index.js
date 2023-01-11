@@ -112,14 +112,12 @@ const Order = bookshelf.model("Order", {
     // relationship with order_items with variants
     //many to many
 })
-const OrderItem = bookshelf.model('OrderItem',{
-    tableName:'order_items',
-    variant()
-    {
+const OrderItem = bookshelf.model('OrderItem', {
+    tableName: 'order_items',
+    variant() {
         return this.belongsTo('Variant');
     },
-    order()
-    {
+    order() {
         return this.belongsTo('Order');
     }
 })
@@ -148,6 +146,8 @@ const CartItem = bookshelf.model("CartItem",
         }
     })
 
+const BlacklistedToken = bookshelf.model('BlacklistedToken', {
+    tableName: 'blacklisted_tokens'
+})
 
-
-module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material, CartItem, OrderItem };
+module.exports = { Shoe, Brand, Gender, Variant, Color, Size, User, Role, Order, Status, Material, CartItem, OrderItem, BlacklistedToken };

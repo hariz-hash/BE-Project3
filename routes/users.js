@@ -10,6 +10,7 @@ const { createRegistrationForm, bootstrapField, createLoginForm } = require('../
 
 router.get('/register', (req, res) => {
     //display registration form
+    
     const registerForm = createRegistrationForm();
     res.render('user/register',
         {
