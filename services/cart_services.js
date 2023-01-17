@@ -15,7 +15,6 @@ async function checkStock(variantId)
     return parseInt(variant.get('stock'));
 }
 
-
 // //ADD THIS
 async function addToCart(userId, variantId, quantity)
 {

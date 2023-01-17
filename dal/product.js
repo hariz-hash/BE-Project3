@@ -97,6 +97,53 @@ async function getAllProducts(variantId, data)
 //       withRelated: ["brand", "materials"],
 //     });
 //   };
+
+
+const searchShoes = async (search) =>
+{
+    let query = Shoe.collection();
+
+    if (search.model) {
+		// MySQL syntax (case insensitive by default)
+		if (process.env.DB_DRIVER == 'mysql') {
+			query.where('model', 'like', `%${search.model}%`);
+		} else {
+			query.where('model', 'ilike', `%${search.model}%`);
+		}
+	}
+    if (search.shoeType) {
+		// MySQL syntax (case insensitive by default)
+		if (process.env.DB_DRIVER == 'mysql') {
+			query.where('shoe_type', 'like', `%${search.shoeType}%`);
+		} else {
+			query.where('shoe_type', 'ilike', `%${search.shoeType}%`);
+		}
+	}
+    if (search.brand_id && search.brand_id != 0) {
+		query.where('brand_id', '=', search.brand_id);
+	}
+
+    if (search.gender_id && search.gender_id != 0) {
+		query.where('gender_id', '=', search.gender_id);
+	}
+    if (search.brand_id && search.brand_id != 0) {
+		query.where('brand_id', '=', search.brand_id);
+	}
+
+    if (search.materials && search.materials != 0) {
+        // ...JOIN products_tags ON products.id = products_tags.product_id
+        query.query('join', 'materials_shoes', 'shoes.id', 'shoe_id')
+            .where('material_id', 'in', search.materials.split(','))
+    }
+
+    const searchShoes = (await query.fetch({
+        withRelated:['gender', 'brand', 'materials'] // for each product, load in each of the tag
+    })).toJSON();
+    return searchShoes;
+    
+
+
+}
 module.exports =
 {
     getAllBrands, 
@@ -108,5 +155,6 @@ module.exports =
     getAllMaterials,
     getVariantByIdwithProduct,
     updateVariant,
-    getAllProducts
+    getAllProducts,
+    searchShoes
 }
