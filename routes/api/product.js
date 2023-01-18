@@ -20,36 +20,33 @@ router.get('/', async (req, res) => {
 router.get('/search', async (req, res) => {
 
     const queryFields = req.query;
-    const shoes = await  productDataLayer.searchShoes(queryFields)
-    res.send({shoes})
+    const shoes = await productDataLayer.searchShoes(queryFields)
+    res.send({ shoes })
 })
-
-
 
 router.get('/:product_id', async (req, res) => {
     const variant = await productDataLayer.getProductById(req.params.product_id)
     res.send(variant);
 })
 
-
-
-
-router.get('/search_options', async (req, res) => {
-    const allBrands = await datalayer.getAllBrands();
+router.get('/search_options', async function (req, res) {
+    const allBrands = await productDataLayer.getAllBrands();
     allBrands.unshift([0, '--- Any Brand ---']);
 
-    const allGender = await datalayer.getAllGenders();
+    const allGender = await productDataLayer.getAllGenders();
     allGender.unshift([0, '--- Any Gender ---']);
 
-    // const allMaterials = await datalayer.getAllMaterials();
-    // allMaterials.unshift([0, '--- Any Materials ---']);
+    const allMaterials = await productDataLayer.getAllMaterials();
+    allMaterials.unshift([0, '--- Any Materials ---']);
 
     const options = {
         allBrands,
-        allGender
+        allGender,
+        allMaterials
     }
 
     res.send({ options })
+
 }
 )
 module.exports = router

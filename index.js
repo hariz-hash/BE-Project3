@@ -5,6 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf= require('csurf');
+const cors = require('cors')
 require("dotenv").config();
 hbs.registerHelper('dateFormat', require('handlebars-dateformat'));
 
@@ -17,6 +18,8 @@ app.set("view engine", "hbs");
 // static folder
 app.use(express.static("public"));
 
+
+app.use(cors());
 // setup wax-on
 wax.on(hbs.handlebars);
 wax.setLayoutPath("./views/layouts");
