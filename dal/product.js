@@ -66,7 +66,7 @@ async function getProductById(productId) {
         "id": productId
     }).fetch(
         {
-            withRelated: ['brand', 'gender', 'materials']
+            withRelated: ['brand', 'gender', 'materials','variants','variants.color','variants.size']
         }
     )
     return product;

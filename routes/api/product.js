@@ -25,8 +25,14 @@ router.get('/search', async (req, res) => {
 })
 
 router.get('/:product_id', async (req, res) => {
-    const variant = await productDataLayer.getProductById(req.params.product_id)
-    res.send(variant);
+    const shoeCall = await productDataLayer.getProductById(req.params.product_id)
+    res.send({shoeCall});
+    console.log(shoeCall)
+})
+
+router.get('/:product_id/shoeDetails', async (req, res) => {
+    const variant = await productDataLayer.getVariantByIdwithProduct(req.params.product_id)
+    res.send({variant});
 })
 
 router.get('/search_options', async function (req, res) {
@@ -42,7 +48,7 @@ router.get('/search_options', async function (req, res) {
     const options = {
         allBrands,
         allGender,
-        allMaterials
+        // allMaterials
     }
 
     res.send({ options })
