@@ -16,7 +16,7 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
     //  res.send(await productDataLayer.getAllProducts())
     const cartItems = await getUserCart(user.id)
     console.log("test")
-    res.json(cartItems)
+    res.send({cartItems: cartItems})
 })
 
 router.post('/:variant_id/add', checkIfAuthenticatedJWT, async (req, res) => {
@@ -52,9 +52,9 @@ router.put('/:variant_id/update', checkIfAuthenticatedJWT, async(req,res)=>{
     }
   })
 
-router.get('/', checkIfAuthenticatedJWT,  async(req,res)=>{
-    res.send(await productDataLayer.getAllProducts())
-})
+// router.get('/', checkIfAuthenticatedJWT,  async(req,res)=>{
+//     res.send(await productDataLayer.getAllProducts())
+// })
 
 router.delete('/:variant_id/remove', checkIfAuthenticatedJWT, async (req, res) => {
     const user = req.user;
