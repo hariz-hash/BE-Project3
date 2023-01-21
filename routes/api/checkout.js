@@ -76,9 +76,13 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
 
     // create the session
     const stripeSession = await Stripe.checkout.sessions.create(payment);
-    res.render('checkouts/checkout', {
-        'sessionId': stripeSession.id,
-        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
+    // res.render('checkouts/checkout', {
+    //     'sessionId': stripeSession.id,
+    //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
+    // })
+
+    res.json({
+        'stripe_url':stripeSession.url
     })
 
 })

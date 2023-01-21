@@ -9,27 +9,24 @@ async function getUserCart(userId) {
     return await cartDataLayer.getCart(userId);
 }
 //GET STOCK
-async function checkStock(variantId)
-{
+async function checkStock(variantId) {
     const variant = await productDataLayer.getVariantById(variantId);
     return parseInt(variant.get('stock'));
 }
 
 // //ADD THIS
-async function addToCart(userId, variantId, quantity)
-{
+async function addToCart(userId, variantId, quantity) {
     const cartItem = await cartDataLayer.getCartItemByUserAndProduct(userId, variantId);
     // console.log(userId)
     // console.log(variantId)
     // console.log(quantity)
     const stock = await checkStock(variantId);
     console.log(variantId + " id")
-    if(cartItem)
-    {
+    if (cartItem) {
         return await cartDataLayer.updateQuantity(userId, variantId, quantity, cartItem.get('quantity') + 1);
     }
-    else{
-        let newCart = cartDataLayer.createCartItem(userId,variantId,quantity);
+    else {
+        let newCart = cartDataLayer.createCartItem(userId, variantId, quantity);
         return newCart;
     }
 }
@@ -37,28 +34,25 @@ async function addToCart(userId, variantId, quantity)
 //UPDATE CART
 async function setQuantity(userId, variantId, quantity) {
     const stock = await checkStock(variantId)
+    
 
-    if(quantity > stock)
-    {
-        return false;
-    }
+    if (quantity < stock) {
+        return await cartDataLayer.updateQuantity(userId, variantId, quantity);
 
-    return await cartDataLayer
-               .updateQuantity(userId, variantId, quantity);
+    } else { return false; }
+
+
 }
 
 //DELETE CART
-async function deleteFromCart(userId, variantId)
-{
+async function deleteFromCart(userId, variantId) {
     return await cartDataLayer.removeFromCart(userId, variantId)
 }
-async function emptyOfCart(userId)
-{
+async function emptyOfCart(userId) {
     const cartList = await cartDataLayer.getCart(userId)
-    for( let i of cartList)
-    {
+    for (let i of cartList) {
         const variantID = i.get('variant_id');
-        await deleteFromCart(userId,variantID)
+        await deleteFromCart(userId, variantID)
     }
 }
-module.exports = {getUserCart, setQuantity, checkStock, addToCart, deleteFromCart, emptyOfCart}
+module.exports = { getUserCart, setQuantity, checkStock, addToCart, deleteFromCart, emptyOfCart }
