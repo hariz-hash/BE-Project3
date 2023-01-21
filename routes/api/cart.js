@@ -10,7 +10,7 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
 
     // extract jwt information
     const user = req.user;
-     console.log(user);
+    console.log(user);
     
     console.log(user.id)
     //  res.send(await productDataLayer.getAllProducts())
@@ -26,7 +26,7 @@ router.post('/:variant_id/add', checkIfAuthenticatedJWT, async (req, res) => {
     const variant_id = req.params.variant_id;
     const quantity = req.body.quantity;
 
-    let add = await addToCart(user.id, variant_id, quantity);
+    let add = await addToCart(user.id, variant_id, 1);
     // res.send(test)
     if (add) {
         res.json({ "yes": "Success" })
@@ -59,15 +59,12 @@ router.get('/', checkIfAuthenticatedJWT,  async(req,res)=>{
 router.delete('/:variant_id/remove', checkIfAuthenticatedJWT, async (req, res) => {
     const user = req.user;
     const variantId = req.params.variant_id;
-
     let deleteItemFromCart = await deleteFromCart(user.id, variantId)
-    
     if (deleteItemFromCart) {
         res.json({ "yes": "Success" })
     }
     else {
         res.json({ 'error': "item has been removed" })
     }
- 
 })
 module.exports = router

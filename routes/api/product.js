@@ -35,6 +35,11 @@ router.get('/:product_id/shoeDetails', async (req, res) => {
     res.send({variant});
 })
 
+router.get('/:product_id/variants', async (req, res) => {
+    const onlyVariant = await productDataLayer.getVariantById(req.params.product_id)
+    res.json({onlyVariant});
+})
+
 router.get('/search_options', async function (req, res) {
     const allBrands = await productDataLayer.getAllBrands();
     allBrands.unshift([0, '--- Any Brand ---']);

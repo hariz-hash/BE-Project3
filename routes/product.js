@@ -479,6 +479,7 @@ router.get('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, asy
         'shoes': shoe.toJSON()
     })
 })
+
 router.post('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, async (req, res) => {
 
     let variantDisplay = await Variant.where({
