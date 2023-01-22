@@ -111,9 +111,17 @@ router.post('/register', async (req, res) => {
     }
     // console.log({ registerNewUser })
     const newUserAccount = await userLayer.addNewUser(registerNewUser, 1);
-    res.send({
-        message: 'User registered!'
-    })
+
+    if (newUserAccount) {
+        res.send({
+            message: true
+        })
+    } else {
+        res.send({
+            message: false
+        })
+    }
+
 })
 
 

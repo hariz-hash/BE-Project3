@@ -34,9 +34,11 @@ async function addToCart(userId, variantId, quantity) {
 //UPDATE CART
 async function setQuantity(userId, variantId, quantity) {
     const stock = await checkStock(variantId)
-    
 
-    if (quantity < stock) {
+    console.log(quantity < stock)
+    console.log(quantity)
+
+    if (quantity < stock && quantity > 0) {
         return await cartDataLayer.updateQuantity(userId, variantId, quantity);
 
     } else { return false; }
