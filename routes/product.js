@@ -3,7 +3,7 @@ const router = express.Router();
 const { checkIfAuthenticated } = require('../middlewares');
 // #1 import in the Product model
 const { bootstrapField, createProductForm, createVariantForm, searchProductForm } = require('../forms');
-const { Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size } = require('../models')
+const { Shoe, Variant, User, Order, Brand, Gender, Material, Color, Size, CartItem, OrderItem } = require('../models')
 const datalayer = require('../dal/product');
 
 router.get('/', checkIfAuthenticated, async (req, res) => {
@@ -63,9 +63,9 @@ router.get('/', checkIfAuthenticated, async (req, res) => {
                 q.query('join', 'materials_shoes', 'shoes.id', 'shoe_id')
                     .where('material_id', 'in', form.data.materials.split(','))
             }
-            
+
             const products = await q.fetch({
-                withRelated:['gender', 'brand', 'materials'] // for each product, load in each of the tag
+                withRelated: ['gender', 'brand', 'materials'] // for each product, load in each of the tag
             });
             res.render('products/index', {
                 'shoes': products.toJSON(),
@@ -480,6 +480,12 @@ router.get('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, asy
     })
 })
 
+router.get('/VariantCannotDelete', checkIfAuthenticated, async (req, res) =>{
+
+    res.render('products/VariantCannotDelete');
+} )
+
+
 router.post('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, async (req, res) => {
 
     let variantDisplay = await Variant.where({
@@ -490,8 +496,73 @@ router.post('/:product_id/variants/:variant_id/delete', checkIfAuthenticated, as
             withRelated: ['color', 'size']
         }
     )
-    await variantDisplay.destroy()
-    res.redirect(`/products/${req.params.product_id}/variants`);
+
+    let cartItems = await CartItem.where({
+        'variant_id': req.params.variant_id
+    }).fetchAll(
+
+        {
+            require: false,
+            withRelated: ['variant']
+        }
+
+        // variant
+    );
+    let orderItems = await OrderItem.where({
+        'variant_id': req.params.variant_id
+    }).fetchAll(
+
+        {
+            require: false,
+            withRelated: ['variant','order']
+        }
+
+    );
+    if (cartItems.length>0 || orderItems.length > 0) {
+        // console.log("Cart items length" + cartItems.length)
+        // console.log("Cart items length" + orderItems.length)
+        //DONT DESTROY
+
+        let place=""
+
+        if (cartItems.length > 0 && orderItems.length == 0 )   {
+            place="cart"
+        } 
+        if(orderItems.length > 0 && cartItems.length == 0){
+            place="order"
+        } 
+         
+        if( cartItems.length>0 && orderItems.length > 0){
+            place="cart and order"
+        }
+
+
+
+        req.flash("error_messages", `User order cannot be deleted as product is still in user's ${place} !`);
+        res.redirect(`/products/${req.params.product_id}/variants`)
+
+    } else {
+        // console.log(cartItems.length)
+        // console.log(orderItems.length)
+
+        //destroy
+        await variantDisplay.destroy()
+        res.redirect(`/products/${req.params.product_id}/variants`);
+    }
+    // console.log(cartItems)
+    // let cartItems = await CartItem.where({
+    //     'variant_id': req.params.variant_id
+    // }).fetch(
+
+    //     // {  require: false,
+    //     //     withRelated: ['variant'] }
+
+    //     // variant
+    // );
+
+    // console.log(cartItems);
+    // await variantDisplay.destroy()
+    
 
 
 })
