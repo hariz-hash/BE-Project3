@@ -81,7 +81,7 @@ async function getVariantAndProductViaParams(product_Id) {
             withRelated: ['brand', 'gender', 'materials']
         }
     )
-    console.log(shoe);
+    // console.log(shoe);
     let variantDisplay = await Variant.where({
         'shoe_id': productId
     }).fetchAll(

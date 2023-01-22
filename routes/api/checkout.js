@@ -90,6 +90,7 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
 router.post('/process_payment', express.raw({ type: 'application/json' }), async function (req, res) {
     // verify that the request is actually sent from the stripe
     const payload = req.body;
+    console.log("teting")
 
     // the stripe-signature will be a hash of the data that stripe is sending you
     const signature = req.headers["stripe-signature"];
@@ -138,9 +139,9 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             user_id: userId,
             order_status_id: 3,
         }
-        // console.log("THIS IS FROM ORDER DATA", orderData);
+         console.log("THIS IS FROM ORDER DATA", orderData);
         const makeOrder = await orderLayer.addOrder(orderData);
-        // console.log(makeOrder.toJSON())
+        console.log(makeOrder.toJSON())
         const orderId = makeOrder.get('id');
 
         // console.log("IN META DATA", metadata)

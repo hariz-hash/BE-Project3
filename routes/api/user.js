@@ -30,7 +30,7 @@ router.post('/login', express.json(), async (req, res) => {
 
     // const loggedInAccount = req.user
     // res.json({ loggedInAccount })
-    console.log("ge")
+    // console.log("ge")
     let user = await User.where({
         'email': req.body.email,
 
@@ -109,7 +109,7 @@ router.post('/register', async (req, res) => {
         password,
         email
     }
-    console.log({ registerNewUser })
+    // console.log({ registerNewUser })
     const newUserAccount = await userLayer.addNewUser(registerNewUser, 1);
     res.send({
         message: 'User registered!'

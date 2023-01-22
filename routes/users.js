@@ -31,7 +31,7 @@ router.post('/register', (req, res) => {
                 userData.password = getHashedPassword(userData.password)
                 const user = new User(userData);
                 await user.save();
-                console.log(userData)
+                // console.log(userData)
                 req.flash("success_messages", "User signed up successfully!");
                 res.redirect('/users/login')
             },

@@ -133,9 +133,9 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             user_id: userId,
             order_status_id: 3,
         }
-        // console.log("THIS IS FROM ORDER DATA", orderData);
+        console.log("THIS IS FROM ORDER DATA", orderData);
         const makeOrder = await orderLayer.addOrder(orderData);
-        // console.log(makeOrder.toJSON())
+        console.log(makeOrder.toJSON())
         const orderId = makeOrder.get('id');
 
         // console.log("IN META DATA", metadata)

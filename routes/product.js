@@ -25,7 +25,7 @@ router.get('/', checkIfAuthenticated, async (req, res) => {
     let searchForm = searchProductForm(allBrands, allGender, allMaterials);
     let q = Shoe.collection()
 
-    console.log({ searchForm })
+    // console.log({ searchForm })
     searchForm.handle(req, {
         'empty': async (form) => {
             let shoes = await q.fetch({
@@ -119,11 +119,11 @@ router.post('/create', checkIfAuthenticated, async (req, res) => {
         success: async (form) => {
             let { materials, ...productData } = form.data;
             const product = new Shoe();
-            console.log(materials)
+            // console.log(materials)
             await product.save(productData);
             if (materials) {
                 await product.materials().attach(materials.split(","));
-                console.log(materials.split(","))
+                // console.log(materials.split(","))
             }
             req.flash("success_messages", `New Product ${product.get('model')} has been created`)
             res.redirect('/products')//where does this url comes from 
@@ -167,7 +167,7 @@ router.get('/:product_id/update', checkIfAuthenticated, async (req, res) => {
         require: true,
         withRelated: ['materials']
     });
-    console.log(productId)
+    // console.log(productId)
     const productForm = createProductForm(brands, genders, materials);
 
     // // fill in the existing values
@@ -279,7 +279,7 @@ router.get('/:product_id/variants', checkIfAuthenticated, async (req, res) => {
             withRelated: ['brand', 'gender', 'materials']
         }
     )
-    console.log(shoe);
+    // console.log(shoe);
     let variantDisplay = await Variant.where({
         'shoe_id': productId
     }).fetchAll(
@@ -303,7 +303,7 @@ router.get('/:product_id/variants/create', checkIfAuthenticated, async (req, res
     })
 
     const productForm = createVariantForm(color, size)
-    console.log({ productForm })
+    // console.log({ productForm })
     res.render('products/create-variant', {
         'form': productForm.toHTML(bootstrapField),
         'cloudinaryName': process.env.CLOUDINARY_NAME,
@@ -342,12 +342,12 @@ router.post('/:product_id/variants/create', checkIfAuthenticated, async (req, re
     productForm.handle(req, {
         success: async (form) => {
             const dataIn = { ...form.data };
-            console.log({ dataIn })
+            // console.log({ dataIn })
             const variantData = {
                 shoe_id: req.params.product_id,
                 ...form.data
             };
-            console.log({ variantData })
+            // console.log({ variantData })
             const variant = new Variant();
             await variant.save(variantData);
 

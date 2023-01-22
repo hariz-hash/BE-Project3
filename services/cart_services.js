@@ -21,7 +21,7 @@ async function addToCart(userId, variantId, quantity) {
     // console.log(variantId)
     // console.log(quantity)
     const stock = await checkStock(variantId);
-    console.log(variantId + " id")
+    // console.log(variantId + " id")
     if (cartItem) {
         return await cartDataLayer.updateQuantity(userId, variantId, quantity, cartItem.get('quantity') + 1);
     }
@@ -49,6 +49,7 @@ async function deleteFromCart(userId, variantId) {
     return await cartDataLayer.removeFromCart(userId, variantId)
 }
 async function emptyOfCart(userId) {
+    console.log(userId)
     const cartList = await cartDataLayer.getCart(userId)
     for (let i of cartList) {
         const variantID = i.get('variant_id');

@@ -27,7 +27,7 @@ router.get('/search', async (req, res) => {
 router.get('/:product_id', async (req, res) => {
     const shoeCall = await productDataLayer.getProductById(req.params.product_id)
     res.send({shoeCall});
-    console.log(shoeCall)
+    // console.log(shoeCall)
 })
 
 router.get('/:product_id/shoeDetails', async (req, res) => {

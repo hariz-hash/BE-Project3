@@ -10,12 +10,12 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
 
     // extract jwt information
     const user = req.user;
-    console.log(user);
+    // console.log(user);
     
-    console.log(user.id)
+    // console.log(user.id)
     //  res.send(await productDataLayer.getAllProducts())
     const cartItems = await getUserCart(user.id)
-    console.log("test")
+    // console.log("test")
     res.send({cartItems: cartItems})
 })
 
@@ -43,12 +43,12 @@ router.put('/:variant_id/update', checkIfAuthenticatedJWT, async(req,res)=>{
     const updateQuantity = req.body.quantity;
     const variant_id = req.params.variant_id;
     // console.log(user.id, variant_id, updateQuantity)
-    console.log(req)
+    // console.log(req)
 
     let update = await setQuantity(user.id, variant_id, updateQuantity);
     if (update) {
         res.json({ "yes": "Success" })
-        console.log(update)
+        // console.log(update)
         
     }
     else {

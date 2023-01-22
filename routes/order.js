@@ -6,8 +6,8 @@ const { searchOrderForm, updateStatusForm, bootstrapField } = require('../forms'
 const { Order } = require('../models')
 
 router.get('/', checkIfAuthenticated, async (req, res) => {
-    console.log('route called')
-    console.log(req.query)
+    // console.log('route called')
+    // console.log(req.query)
     const orders = await dataLayer.retrieveAllOrders()
     const status = await dataLayer.retrieveStatus()
     //search form
@@ -17,21 +17,21 @@ router.get('/', checkIfAuthenticated, async (req, res) => {
     showOrderForm.handle(req, {
         'success': async function (form) {
             if (form.data.min_cost) {
-                console.log(form.data.min_cost)
+                // console.log(form.data.min_cost)
                 q.where('total_amount', '>=', form.data.min_cost)
             }
             if (form.data.max_cost) {
-                console.log(form.data.max_cost)
+                // console.log(form.data.max_cost)
 
                 q.where('total_amount', '<=', form.data.max_cost)
             }
             if (form.data.shipping_postal_code) {
-                console.log(form.data.shipping_postal_code)
+                // console.log(form.data.shipping_postal_code)
 
                 q.where('shipping_postal_code', '=', form.data.shipping_postal_code)
             }
             if (form.data.order_status_id) {
-                console.log(form.data.order_status_id)
+                // console.log(form.data.order_status_id)
                 q.where('order_status_id', '=', form.data.order_status_id)
             }
 
