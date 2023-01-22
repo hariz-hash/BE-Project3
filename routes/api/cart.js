@@ -47,12 +47,12 @@ router.put('/:variant_id/update', checkIfAuthenticatedJWT, async(req,res)=>{
 
     let update = await setQuantity(user.id, variant_id, updateQuantity);
     if (update) {
-        res.json({ "yes": "Success" })
+        res.json({ "state": true })
         // console.log(update)
         
     }
     else {
-        res.json({ 'error': "item has reached it's limit" })
+        res.json({ "state": false })
     }
   })
 
