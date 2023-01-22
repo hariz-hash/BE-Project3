@@ -22,15 +22,49 @@ async function retrieveAllOrders() {
 async function retrieveOrderById(orderId) {
     const order = await Order.where({
         id: orderId
-    }).fetch({
+    }).fetchAll({
         require: true,
         withRelated: [
             'user',
-            'status'
+            'status',
+            'orderItems',
+            'orderItems.variant',
+
         ]
     })
+     console.log(order)
     return order;
 }
+
+async function retrieveOrderByUser(userId) {
+    const order = await Order.where({
+        user_id: userId
+    }).fetchAll({
+        require: false,
+        withRelated: [
+            'user',
+            'status',
+            'orderItems',
+            'orderItems.variant',
+
+        ]
+    })
+     console.log(order)
+    return order;
+}
+
+// async function retrieveOrderById(orderId) {
+//     const order = await Order.where({
+//         id: orderId
+//     }).fetch({
+//         require: true,
+//         withRelated: [
+//             'user',
+//             'status'
+//         ]
+//     })
+//     return order;
+// }
 
 async function retrieveStatus() {
     const retrieveStatus = await Status.fetchAll().map((each) => {
@@ -57,6 +91,7 @@ module.exports =
     retrieveAllOrders,
     retrieveStatus,
     retrieveOrderById,
-    updateOrder
+    updateOrder,
+    retrieveOrderByUser
 
 }

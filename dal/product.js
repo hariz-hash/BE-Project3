@@ -118,28 +118,29 @@ async function getAllProducts(variantId, data) {
 
 const searchShoes = async (search) => {
     let query = Shoe.collection();
-
+    // console.log(search);
     if (search.model) {
-        // MySQL syntax (case insensitive by default)
-        if (process.env.DB_DRIVER == 'mysql') {
+        
             query.where('model', 'like', `%${search.model}%`);
-        } else {
-            query.where('model', 'ilike', `%${search.model}%`);
-        }
+        
+    }
+    if (search.description) {
+        
+            query.where('description', 'like', `%${search.description}%`);
+        
     }
     if (search.shoeType) {
-        // MySQL syntax (case insensitive by default)
-        if (process.env.DB_DRIVER == 'mysql') {
+        
             query.where('shoe_type', 'like', `%${search.shoeType}%`);
-        } else {
-            query.where('shoe_type', 'ilike', `%${search.shoeType}%`);
-        }
+       
+        
+        
     }
     if (search.brand_id && search.brand_id != 0) {
         query.where('brand_id', '=', search.brand_id);
     }
-
-    if (search.gender_id && search.gender_id != 0) {
+    
+    if (search.gender_id && parseInt(search.gender_id) != 0) {
         query.where('gender_id', '=', search.gender_id);
     }
     if (search.brand_id && search.brand_id != 0) {
@@ -155,6 +156,7 @@ const searchShoes = async (search) => {
     const searchShoes = (await query.fetch({
         withRelated: ['gender', 'brand', 'materials'] // for each product, load in each of the tag
     })).toJSON();
+    // console.log(searchShoes)
     return searchShoes;
 
 
