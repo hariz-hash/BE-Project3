@@ -100,3 +100,42 @@ The colour choosen
 | [Bootstrap](https://getbootstrap.com/docs/5.0/getting-started/introduction/) | Used for styling of web application |
 | [Stripe](https://stripe.com/en-sg) | Payment gateway used in web application |
 | [GoogleFont](https://fonts.google.com/) | For font display |
+
+##  Testing
+Test case pdf
+
+##  Deployment
+
+
+The Express server makes use of the following environment variables:
+
+```
+SESSION_SECRET=
+
+DB_DRIVER=
+DB_USER=
+DB_PASSWORD=
+DB_DATABASE=
+DB_HOST=
+
+CLOUDINARY_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_UPLOAD_PRESET=
+
+TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+
+STRIPE_SUCCESS_URL=
+STRIPE_CANCEL_URL=
+STRIPE_ENDPOINT_SECRET=
+```
+## Credits and Acknowledgement
+- Fonts are taken from [Google Fonts](https://fonts.google.com/)
+- Product images are taken from [Amazon](https://www.amazon.sg/)
+-    Wesley's  github repository on refresh token and variants
+-    Yong Sheng, Paul, Wesley for guidance in the project
+-   Responsive website mockup is created using  [CreateMockup.com](https://www.createmockup.com/generate/)
