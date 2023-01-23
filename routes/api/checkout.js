@@ -82,7 +82,9 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     // })
 
     res.json({
-        'stripe_url':stripeSession.url
+        'stripe_url':stripeSession.url,
+        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY,
+        'sessionId': stripeSession.id,
     })
 
 })
