@@ -48,8 +48,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// enable CSRF
-// app.use(csrf());
 
 const csrfInstance = csrf(); // create an instance of the middleware
 app.use(function(req,res,next){
@@ -121,6 +119,3 @@ app.listen(3030, () => {
   console.log("Server has started");
 });
 
-// app.listen(process.env.PORT || 3000, () => {
-//   console.log("Server has started");
-// });
