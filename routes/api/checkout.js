@@ -15,7 +15,7 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     // console.log(itemsInCart);
     const lineItems = [];
     const meta = [];
-
+    console.log("test")
     for (let i of itemsInCart) {
 
         const lineItem = {
@@ -90,7 +90,7 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
 router.post('/process_payment', express.raw({ type: 'application/json' }), async function (req, res) {
     // verify that the request is actually sent from the stripe
     const payload = req.body;
-    console.log("teting")
+   
 
     // the stripe-signature will be a hash of the data that stripe is sending you
     const signature = req.headers["stripe-signature"];
