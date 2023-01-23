@@ -42,11 +42,11 @@ async function getVariantByIdwithProduct(productId) {
     }).fetchAll(
         {
             require: false,
-            withRelated: ['color', 'size']
+            withRelated: ['color', 'size', 'shoe']
         }
     )
     return variant;
-}
+}// shoe id
 
 async function getVariantById(productId) {
     const variant = await Variant.where({
@@ -57,8 +57,11 @@ async function getVariantById(productId) {
             withRelated: ['color', 'size', 'shoe']
         }
     )
+    console.log(variant)
     return variant;
 }
+
+
 
 async function getProductById(productId) {
     const product = await Shoe.where({
@@ -68,6 +71,9 @@ async function getProductById(productId) {
             withRelated: ['brand', 'gender', 'materials', 'variants', 'variants.color', 'variants.size']
         }
     )
+
+console.log(product)
+
     return product;
 }
 

@@ -26,17 +26,19 @@ router.get('/search', async (req, res) => {
 
 router.get('/:product_id', async (req, res) => {
     const shoeCall = await productDataLayer.getProductById(req.params.product_id)
+    // console.log(shoeCall.model)
     res.send({shoeCall});
     // console.log(shoeCall)
 })
 
 router.get('/:product_id/shoeDetails', async (req, res) => {
     const variant = await productDataLayer.getVariantByIdwithProduct(req.params.product_id)
-    res.send({variant});
-})
+    res.send({variant}); 
+})// shoe id
 
 router.get('/:product_id/variants', async (req, res) => {
     const onlyVariant = await productDataLayer.getVariantById(req.params.product_id)
+    // console.log(onlyVariant)
     res.json({onlyVariant});
 })
 
