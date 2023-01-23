@@ -22,8 +22,8 @@ async function retrieveAllOrders() {
 async function retrieveOrderById(orderId) {
     const order = await Order.where({
         id: orderId
-    }).fetchAll({
-        require: true,
+    }).fetch({
+        require: false,
         withRelated: [
             'user',
             'status',

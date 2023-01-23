@@ -84,8 +84,9 @@ router.post('/update/:order_id', checkIfAuthenticated, async (req, res) => {
     createUpdateForm.handle(req, {
         success: async function (form) {
             const { ...orderData } = form.data;
+            console.log(orderData)
             order.set(orderData);
-            await order.save()
+             await order.save()
             // await dataLayer.updateOrder(orderData)
             req.flash('success_messages', 'order updated')
             res.redirect('/order')

@@ -223,6 +223,7 @@ router.post('/:product_id/update', checkIfAuthenticated, async (req, res) => {
 
             //Remove all the materials that aren't selected anyomre
             let toRemove = existingMaterialIds.filter(id => materialIds.includes(id) === false);
+            console.log(toRemove);
             await product.materials().detach(toRemove);
             await product.materials().attach(materialIds);
 
