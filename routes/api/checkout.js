@@ -7,7 +7,7 @@ const cartServices = require('../../services/cart_services');
 const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { checkIfAuthenticatedJWT } = require('../../middlewares')
 
-router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
+router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     const user = req.user;
     const cartItems = await cartServices.getUserCart(user.id)
     // console.log(cartItems.toJSON())
@@ -25,10 +25,10 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
                 'unit_amount': i.variant.cost,
                 'product_data': {
                     'name': i.variant.shoe.model + ', ' +
-                        i.variant.shoe.shoe_type + ', ' +
-                        i.variant.color.color + ', ' +
-                        i.variant.shoe.brand.brand + ', ' +
-                        i.variant.size.size
+                     i.variant.shoe.shoe_type + ', ' +  
+                     i.variant.color.color + ', ' + 
+                     i.variant.shoe.brand.brand + ', '+
+                    i.variant.size.size
                 }
             }
         }
@@ -41,13 +41,13 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
         lineItems.push(lineItem);
 
         // record how many quantity has been purchased for this product id
-
+ 
         meta.push({
             user_id: i.user_id,
             quantity: i.quantity,
             variant_id: i.variant_id,
         })
-
+        
     };
 
     // CREATE PAYMENT
@@ -81,12 +81,8 @@ router.get('/', checkIfAuthenticatedJWT, async (req, res) => {
     //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
     // })
 
-    // res.json({
-    //     'stripe_url': stripeSession.url
-    // })
     res.json({
-        'sessionId': stripeSession.id,
-        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
+        'stripe_url':stripeSession.url
     })
 
 })
@@ -96,7 +92,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
     const payload = req.body;
     // const payload = req.rawBody
 
-
+   
 
     // the stripe-signature will be a hash of the data that stripe is sending you
     const signature = req.headers["stripe-signature"];
@@ -145,17 +141,18 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             user_id: userId,
             order_status_id: 3,
         }
-        console.log("THIS IS FROM ORDER DATA", orderData);
+         console.log("THIS IS FROM ORDER DATA", orderData);
         const makeOrder = await orderLayer.addOrder(orderData);
         console.log(makeOrder.toJSON())
         const orderId = makeOrder.get('id');
 
         // console.log("IN META DATA", metadata)
-        for (let lineItem of metadata) {
+        for( let lineItem of metadata)
+        {
             const variantId = lineItem.variant_id;
             const quantity = lineItem.quantity;
 
-            const orderItemData = {
+            const orderItemData= {
                 order_id: orderId,
                 variant_id: variantId,
                 quantity: quantity,
@@ -164,12 +161,11 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             const stock = await cartServices.checkStock(variantId);
             // await productLayer.u
             const updatedStock = stock - quantity;
-            await productLayer.updateVariant(variantId, updatedStock);
-
+            await productLayer.updateVariant(variantId,updatedStock);
+            
         }
 
         await cartServices.emptyOfCart(userId);
-        res.send({ message: "Checkout successful" });
 
     }
     res.sendStatus(200);
