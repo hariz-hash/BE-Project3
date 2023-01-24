@@ -75,23 +75,15 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     }
 
     // create the session
-    let stripeSession = await Stripe.checkout.sessions.create(payment);
+    const stripeSession = await Stripe.checkout.sessions.create(payment);
     // res.render('checkouts/checkout', {
     //     'sessionId': stripeSession.id,
     //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
     // })
-    
-    // sendResponse(res, 200, {
-	// 	sessionId: stripeSession.id,
-	// 	publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
-	// });
-
-    res.json({
-        'sessionId': stripeSession.id,
-        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
-    })
-           
-
+    sendResponse(res, 200, {
+		sessionId: stripeSession.id,
+		publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+	});
     // res.json({
     //     'stripe_url':stripeSession.url,
     //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY,
