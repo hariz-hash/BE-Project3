@@ -80,12 +80,18 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     //     'sessionId': stripeSession.id,
     //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
     // })
+    
+    sendResponse(res, 200, {
+		sessionId: stripeSession.id,
+		publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+	});
 
-    res.json({
-        'stripe_url':stripeSession.url,
-        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY,
-        'sessionId': stripeSession.id,
-    })
+
+    // res.json({
+    //     'stripe_url':stripeSession.url,
+    //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY,
+    //     'sessionId': stripeSession.id,
+    // })
 
 })
 
