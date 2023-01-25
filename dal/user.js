@@ -3,7 +3,7 @@ const { User } = require('../models');
 
 async function addNewUser(newuserAccount, roleId) {
     const newUser = new User();
-    newuserAccount.role_Id = roleId
+    newuserAccount.role_id = roleId
     newUser.set(newuserAccount)
 
     const checkEmail = await User.where({
