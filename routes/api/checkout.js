@@ -80,7 +80,7 @@ router.get('/',checkIfAuthenticatedJWT, async (req, res) => {
     //     'sessionId': stripeSession.id,
     //     'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
     // })
-    console.log("Checking stripe " + stripeSession)
+    console.log("Checking stripe id" + stripeSession)
     res.json({
         'sessionId': stripeSession.id,
         'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
@@ -104,6 +104,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
     let event = null;
     try {
         event = Stripe.webhooks.constructEvent(payload, signature, endpointSecret);
+        console.log(event)
     } catch (e) {
         res.status(500);
         res.send({
